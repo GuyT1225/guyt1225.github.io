@@ -14,7 +14,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  
+   <url>
+    <loc>https://pastelint.netlify.app/fix-copy-paste-formatting.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://pastelint.netlify.app/ai-text-cleaner.html</loc>
     <changefreq>monthly</changefreq>
