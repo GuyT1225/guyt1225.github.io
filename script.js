@@ -396,6 +396,211 @@ btnClear.addEventListener('click', () => {
   btnShowDiff.disabled = true;
 }, { capture: false });
 
+// ==============================================
+// --- History Feature ---
+// Saves the last 10 cleaned sessions to
+// localStorage so users can revisit them.
+// ==============================================
+
+const HISTORY_KEY     = 'fcpf_history';
+const HISTORY_MAX     = 10;   // maximum entries to keep
+const PREVIEW_LENGTH  = 90;   // characters shown as preview
+
+const historyList     = document.getElementById('history-list');
+const btnClearHistory = document.getElementById('btn-clear-history');
+
+/**
+ * Loads history entries from localStorage.
+ * Returns an empty array if nothing is stored or if parsing fails.
+ * @returns {Object[]}
+ */
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Persists the history array back to localStorage.
+ * Silently swallows quota errors so the tool still works.
+ * @param {Object[]} entries
+ */
+function saveHistory(entries) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(entries));
+  } catch {
+    // localStorage full — skip saving
+  }
+}
+
+/**
+ * Adds a new entry to the front of the history list and trims to HISTORY_MAX.
+ * Duplicate entries (identical cleaned text) replace the existing one.
+ * @param {string} original - Raw input text
+ * @param {string} cleaned  - Cleaned output text
+ */
+function addHistoryEntry(original, cleaned) {
+  let entries = loadHistory();
+
+  // Avoid saving if cleaned text is empty
+  if (!cleaned.trim()) return;
+
+  // Remove any existing entry with the same cleaned text (dedup)
+  entries = entries.filter(e => e.cleaned !== cleaned);
+
+  // Build the new entry
+  const entry = {
+    id:        Date.now(),
+    timestamp: Date.now(),
+    original,
+    cleaned,
+    originalLen: original.length,
+    cleanedLen:  cleaned.length
+  };
+
+  // Newest first, cap at max
+  entries.unshift(entry);
+  entries = entries.slice(0, HISTORY_MAX);
+
+  saveHistory(entries);
+  renderHistory();
+}
+
+/**
+ * Deletes a single history entry by its id.
+ * @param {number} id
+ */
+function deleteHistoryEntry(id) {
+  const entries = loadHistory().filter(e => e.id !== id);
+  saveHistory(entries);
+  renderHistory();
+}
+
+/**
+ * Returns a human-readable relative time string (e.g. "2 minutes ago").
+ * @param {number} timestamp - Unix ms timestamp
+ * @returns {string}
+ */
+function relativeTime(timestamp) {
+  const diff = Date.now() - timestamp;
+  const s  = Math.floor(diff / 1000);
+  const m  = Math.floor(s / 60);
+  const h  = Math.floor(m / 60);
+  const d  = Math.floor(h / 24);
+
+  if (s < 10)  return 'just now';
+  if (s < 60)  return `${s} second${s !== 1 ? 's' : ''} ago`;
+  if (m < 60)  return `${m} minute${m !== 1 ? 's' : ''} ago`;
+  if (h < 24)  return `${h} hour${h !== 1 ? 's' : ''} ago`;
+  return `${d} day${d !== 1 ? 's' : ''} ago`;
+}
+
+/**
+ * Renders the history list into the #history-list element.
+ * Shows an empty-state message when there are no entries.
+ */
+function renderHistory() {
+  const entries = loadHistory();
+
+  if (entries.length === 0) {
+    historyList.innerHTML = '<p class="history-empty">No sessions yet. Clean some text and it will appear here.</p>';
+    btnClearHistory.style.visibility = 'hidden';
+    return;
+  }
+
+  btnClearHistory.style.visibility = 'visible';
+
+  historyList.innerHTML = entries.map(entry => {
+    // Build a safe text preview (no HTML injection)
+    const preview = entry.cleaned.slice(0, PREVIEW_LENGTH).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const ellipsis = entry.cleaned.length > PREVIEW_LENGTH ? '…' : '';
+    const delta = entry.originalLen - entry.cleanedLen;
+    const deltaLabel = delta > 0
+      ? `−${delta.toLocaleString()} chars`
+      : delta < 0
+        ? `+${Math.abs(delta).toLocaleString()} chars`
+        : 'no size change';
+
+    return `
+      <div class="history-entry" data-id="${entry.id}">
+        <div class="history-entry-info">
+          <div class="history-entry-preview">${preview}${ellipsis}</div>
+          <div class="history-entry-meta">
+            <span>${relativeTime(entry.timestamp)}</span>
+            <span>${entry.cleanedLen.toLocaleString()} chars cleaned</span>
+            <span>${deltaLabel}</span>
+          </div>
+        </div>
+        <div class="history-entry-actions">
+          <button class="btn-restore" data-id="${entry.id}" title="Load this session back into the tool">Restore</button>
+          <button class="btn-delete-entry" data-id="${entry.id}" title="Remove this entry" aria-label="Delete entry">×</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/**
+ * Restores a history entry into the input and output textareas.
+ * @param {number} id
+ */
+function restoreHistoryEntry(id) {
+  const entry = loadHistory().find(e => e.id === id);
+  if (!entry) return;
+
+  inputText.value  = entry.original;
+  outputText.value = entry.cleaned;
+  updateCount(inputText,  inputCount);
+  updateCount(outputText, outputCount);
+
+  // Enable diff button since we now have a before/after pair
+  btnShowDiff.disabled = false;
+
+  // If diff panel is open, re-render it with the restored content
+  if (!diffSection.hidden) {
+    renderDiff(entry.original, entry.cleaned);
+  }
+
+  // Scroll smoothly back to the top of the tool
+  inputText.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showFeedback('Session restored.');
+}
+
+// --- Event delegation for Restore and Delete buttons inside the list ---
+historyList.addEventListener('click', (e) => {
+  const id = parseInt(e.target.dataset.id, 10);
+  if (isNaN(id)) return;
+
+  if (e.target.classList.contains('btn-restore')) {
+    restoreHistoryEntry(id);
+  } else if (e.target.classList.contains('btn-delete-entry')) {
+    deleteHistoryEntry(id);
+  }
+});
+
+// --- Clear All History ---
+btnClearHistory.addEventListener('click', () => {
+  if (!confirm('Clear all saved sessions?')) return;
+  saveHistory([]);
+  renderHistory();
+});
+
+// --- Hook into Clean Text to auto-save ---
+// (adds a second listener that fires after the main clean listener)
+btnClean.addEventListener('click', () => {
+  // Only save if there is cleaned output to record
+  const raw     = inputText.value;
+  const cleaned = outputText.value;
+  if (raw.trim() && cleaned.trim()) {
+    addHistoryEntry(raw, cleaned);
+  }
+});
+
+// --- Initial render ---
+renderHistory();
+
 // --- Initial count display ---
 updateCount(inputText, inputCount);
 updateCount(outputText, outputCount);
