@@ -589,6 +589,94 @@ main {
 }
 
 /* =============================================
+   ADVANCED FEATURES COLLAPSIBLE
+   ============================================= */
+.advanced-details {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* The clickable summary row */
+.advanced-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  background: #f8fafc;
+  transition: background 0.15s;
+}
+
+/* Remove default marker in all browsers */
+.advanced-summary::-webkit-details-marker { display: none; }
+.advanced-summary::marker               { display: none; }
+
+.advanced-summary:hover { background: #eff6ff; }
+
+.advanced-summary-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+/* Small "tag" chips describing what's inside */
+.advanced-summary-chips {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.adv-chip {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* Rotating arrow indicator */
+.advanced-summary-arrow {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.advanced-details[open] .advanced-summary-arrow {
+  transform: rotate(90deg);
+}
+
+/* Body: stack panels with a gap */
+.advanced-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Each panel inside advanced gets a separator */
+.adv-panel {
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.adv-panel:last-child { border-bottom: none; }
+
+/* =============================================
    DIFF SECTION
    ============================================= */
 .diff-section {

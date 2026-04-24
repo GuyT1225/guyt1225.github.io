@@ -132,39 +132,56 @@
       <ul class="report-list" id="report-list" aria-live="polite"></ul>
     </section>
 
-    <!-- Diff View Panel -->
-    <section id="diff-section" class="diff-section" hidden aria-label="Changes view">
-      <div class="diff-header">
-        <span class="diff-title">What Changed</span>
-        <span class="diff-legend">
-          <span class="legend-item"><mark class="diff-removed">removed</mark></span>
-          <span class="legend-item"><mark class="diff-added">added</mark></span>
-          <span class="diff-summary" id="diff-summary"></span>
+    <!-- Advanced Features (collapsible) -->
+    <details class="advanced-details" id="advanced-details">
+      <summary class="advanced-summary">
+        <span class="advanced-summary-label">Advanced Features</span>
+        <span class="advanced-summary-chips">
+          <span class="adv-chip">Show Changes</span>
+          <span class="adv-chip">Custom Rules</span>
+          <span class="adv-chip">Session History</span>
         </span>
-      </div>
-      <div id="diff-output" class="diff-output" aria-live="polite"></div>
-    </section>
+        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+      </summary>
 
-    <!-- Custom Rules Panel -->
-    <section class="custom-rules-section" aria-label="Custom find and replace rules">
-      <div class="custom-rules-header">
-        <div>
-          <span class="custom-rules-title">Custom Rules</span>
-          <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
-        </div>
-        <button id="btn-add-rule" class="btn-link">+ Add rule</button>
-      </div>
-      <div id="rules-list" class="rules-list"></div>
-    </section>
+      <div class="advanced-body">
 
-    <!-- History Panel -->
-    <section id="history-section" class="history-section" aria-label="Recent sessions">
-      <div class="history-header">
-        <span class="history-title">Recent Sessions</span>
-        <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+        <!-- Diff View Panel -->
+        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+          <div class="diff-header">
+            <span class="diff-title">What Changed</span>
+            <span class="diff-legend">
+              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+              <span class="legend-item"><mark class="diff-added">added</mark></span>
+              <span class="diff-summary" id="diff-summary"></span>
+            </span>
+          </div>
+          <div id="diff-output" class="diff-output" aria-live="polite"></div>
+        </section>
+
+        <!-- Custom Rules Panel -->
+        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+          <div class="custom-rules-header">
+            <div>
+              <span class="custom-rules-title">Custom Rules</span>
+              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+            </div>
+            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+          </div>
+          <div id="rules-list" class="rules-list"></div>
+        </section>
+
+        <!-- History Panel -->
+        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+          <div class="history-header">
+            <span class="history-title">Recent Sessions</span>
+            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+
       </div>
-      <div id="history-list" class="history-list"></div>
-    </section>
+    </details>
 
     <!-- SEO Text -->
     <section class="seo-text">

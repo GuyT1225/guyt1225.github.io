@@ -33,9 +33,10 @@ const reportSection = document.getElementById('report-section');
 const reportBadge   = document.getElementById('report-badge');
 const reportList    = document.getElementById('report-list');
 
-const diffSection   = document.getElementById('diff-section');
-const diffOutput    = document.getElementById('diff-output');
-const diffSummary   = document.getElementById('diff-summary');
+const diffSection     = document.getElementById('diff-section');
+const diffOutput      = document.getElementById('diff-output');
+const diffSummary     = document.getElementById('diff-summary');
+const advancedDetails = document.getElementById('advanced-details');
 
 const presetsList       = document.getElementById('presets-list');
 const btnSavePreset     = document.getElementById('btn-save-preset');
@@ -441,6 +442,10 @@ btnShowDiff.addEventListener('click', () => {
     renderDiff(inputText.value, outputText.value);
     diffSection.hidden = false;
     btnShowDiff.textContent = 'Hide Changes';
+    // Ensure the Advanced section is open so the diff is visible
+    advancedDetails.open = true;
+    // Smooth scroll to bring it into view
+    setTimeout(() => diffSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
   } else {
     diffSection.hidden = true;
     btnShowDiff.textContent = 'Show Changes';
@@ -867,6 +872,9 @@ function restoreHistoryEntry(id) {
   if (currentMode === 'lines') renderLineTable(entry.original, entry.cleaned);
 
   renderReport(entry.original);
+
+  // Open advanced section if diff is showing so it stays visible
+  if (!diffSection.hidden) advancedDetails.open = true;
 
   inputText.scrollIntoView({ behavior: 'smooth', block: 'center' });
   showFeedback('Session restored.');
