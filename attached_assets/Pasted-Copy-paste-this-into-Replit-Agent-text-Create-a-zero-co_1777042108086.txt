@@ -1,0 +1,69 @@
+Copy/paste this into Replit Agent:
+
+```text
+Create a zero-cost, static HTML/CSS/JavaScript utility website called “Fix Copy Paste Formatting.”
+
+Goal:
+Build a simple, fast, mobile-friendly text cleaning tool that helps users clean messy copied text from AI tools, PDFs, Word, websites, email, and IVR/TTS scripts.
+
+Use only:
+- index.html
+- style.css
+- script.js
+- No backend
+- No database
+- No external paid services
+- No login
+
+Homepage SEO:
+Title: Fix Copy Paste Formatting Online Free Tool
+Meta description: Free online tool to clean copied text, remove hidden characters, fix spacing, remove weird formatting, and prepare text for AI output, documents, email, websites, or IVR voice systems.
+H1: Fix Copy Paste Formatting Instantly
+
+Page layout:
+- Clean modern interface
+- Large input textarea labeled “Paste messy text”
+- Large output textarea labeled “Cleaned text”
+- Buttons:
+  1. Clean Text
+  2. Copy Output
+  3. Clear
+- Show character count for input and output
+- Add short explanatory SEO text below the tool
+
+Add cleaning modes with checkboxes:
+1. Basic Clean, checked by default
+   - Trim leading/trailing spaces
+   - Collapse repeated spaces
+   - Normalize smart quotes to regular quotes
+   - Normalize long dashes to hyphens
+   - Reduce excessive blank lines
+
+2. Remove Hidden Characters, checked by default
+   - Remove zero-width spaces
+   - Remove invisible Unicode formatting characters
+   - Remove non-breaking spaces or convert them to normal spaces
+
+3. IVR / TTS Mode, unchecked by default
+   - Replace & with “and”
+   - Replace @ with “at”
+   - Remove or simplify special symbols that may sound strange in text-to-speech
+   - Keep normal sentence punctuation when possible
+
+Important:
+Do NOT destroy normal readable punctuation unless IVR / TTS Mode is selected.
+Output should preserve readability.
+
+Add examples below the tool:
+- Fix copy paste formatting from Word or PDFs
+- Clean AI-generated text before pasting into email
+- Remove hidden characters from copied text
+- Prepare text for IVR, Amazon Polly, or text-to-speech systems
+
+Add small footer:
+“Free text cleaner. No login. No upload. Text is cleaned in your browser.”
+
+Make the code clean, commented, and beginner-friendly.
+```
+
+Use that as your first build prompt.

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fix Copy Paste Formatting Online Free Tool</title>
+  <meta name="description" content="Free online tool to clean copied text, remove hidden characters, fix spacing, remove weird formatting, and prepare text for AI output, documents, email, websites, or IVR voice systems." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Fix Copy Paste Formatting Instantly</h1>
+    <p class="subtitle">Clean messy text from AI tools, PDFs, Word, websites, email, and IVR/TTS scripts — right in your browser.</p>
+  </header>
+
+  <main>
+
+    <!-- Cleaning Mode Options -->
+    <section class="options-section" aria-label="Cleaning modes">
+      <h2 class="options-title">Cleaning Modes</h2>
+      <div class="options-grid">
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-basic" checked />
+          <span class="option-text">
+            <strong>Basic Clean</strong>
+            <small>Trim spaces, collapse duplicates, fix smart quotes &amp; dashes, reduce blank lines</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-hidden" checked />
+          <span class="option-text">
+            <strong>Remove Hidden Characters</strong>
+            <small>Strip zero-width spaces, invisible Unicode, and non-breaking spaces</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-ivr" />
+          <span class="option-text">
+            <strong>IVR / TTS Mode</strong>
+            <small>Replace &amp; with "and", @ with "at", and simplify symbols for text-to-speech</small>
+          </span>
+        </label>
+
+      </div>
+    </section>
+
+    <!-- Textarea Area -->
+    <section class="textareas-section">
+      <div class="textarea-wrapper">
+        <label for="input-text">Paste messy text</label>
+        <textarea id="input-text" placeholder="Paste your text here..." spellcheck="false"></textarea>
+        <div class="char-count" id="input-count">0 characters</div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <label for="output-text">Cleaned text</label>
+        <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
+        <div class="char-count" id="output-count">0 characters</div>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="buttons-section" aria-label="Actions">
+      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-clear" class="btn btn-ghost">Clear</button>
+    </section>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <!-- SEO Description Text -->
+    <section class="seo-text">
+      <h2>What This Tool Does</h2>
+      <p>
+        When you copy text from Word documents, PDFs, AI chatbots, emails, or websites, it often carries invisible
+        formatting baggage — extra spaces, non-breaking characters, smart quotes, long dashes, and hidden Unicode
+        characters that can break your layouts, confuse voice systems, or just look wrong.
+      </p>
+      <p>
+        This free tool cleans all of that up instantly in your browser. No upload required, no account needed.
+        Your text never leaves your device.
+      </p>
+
+      <h2>Common Use Cases</h2>
+      <ul class="use-cases">
+        <li>Fix copy paste formatting from Word or PDFs</li>
+        <li>Clean AI-generated text before pasting into email</li>
+        <li>Remove hidden characters from copied text</li>
+        <li>Prepare text for IVR, Amazon Polly, or text-to-speech systems</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Free text cleaner. No login. No upload. Text is cleaned in your browser.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
