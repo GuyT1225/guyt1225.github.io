@@ -9,6 +9,7 @@ const inputCount  = document.getElementById('input-count');
 const outputCount = document.getElementById('output-count');
 const btnClean    = document.getElementById('btn-clean');
 const btnCopy     = document.getElementById('btn-copy');
+const btnDownload = document.getElementById('btn-download');
 const btnClear    = document.getElementById('btn-clear');
 const btnShowDiff = document.getElementById('btn-show-diff');
 const diffSection = document.getElementById('diff-section');
@@ -150,8 +151,9 @@ btnClean.addEventListener('click', () => {
   if (!raw.trim()) {
     outputText.value = '';
     updateCount(outputText, outputCount);
-    // Reset diff state
-    btnShowDiff.disabled = true;
+    // Reset diff and download state
+    btnShowDiff.disabled  = true;
+    btnDownload.disabled  = true;
     diffSection.hidden = true;
     btnShowDiff.textContent = 'Show Changes';
     return;
@@ -161,8 +163,9 @@ btnClean.addEventListener('click', () => {
   outputText.value = cleaned;
   updateCount(outputText, outputCount);
 
-  // Enable the diff button now that we have a before/after pair
+  // Enable action buttons now that we have a before/after pair
   btnShowDiff.disabled = false;
+  btnDownload.disabled = false;
 
   // If diff panel was already open, refresh it automatically
   if (!diffSection.hidden) {
@@ -389,11 +392,38 @@ function renderDiff(original, cleaned) {
   diffSummary.textContent = parts.join(', ');
 }
 
-// --- Clear also resets diff state ---
+// --- Button: Download .txt ---
+btnDownload.addEventListener('click', () => {
+  const text = outputText.value;
+  if (!text) return;
+
+  // Build a filename with the current date and time (e.g. cleaned-2026-04-24_14-30.txt)
+  const now  = new Date();
+  const date = now.toISOString().slice(0, 10);
+  const time = now.toTimeString().slice(0, 5).replace(':', '-');
+  const filename = `cleaned-${date}_${time}.txt`;
+
+  // Create a temporary Blob URL, click it, then revoke it
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  showFeedback(`Downloaded as ${filename}`);
+});
+
+// --- Clear also resets diff and download state ---
 btnClear.addEventListener('click', () => {
   diffSection.hidden = true;
   btnShowDiff.textContent = 'Show Changes';
   btnShowDiff.disabled = true;
+  btnDownload.disabled = true;
 }, { capture: false });
 
 // ==============================================
@@ -555,8 +585,9 @@ function restoreHistoryEntry(id) {
   updateCount(inputText,  inputCount);
   updateCount(outputText, outputCount);
 
-  // Enable diff button since we now have a before/after pair
+  // Enable action buttons since we now have a before/after pair
   btnShowDiff.disabled = false;
+  btnDownload.disabled = false;
 
   // If diff panel is open, re-render it with the restored content
   if (!diffSection.hidden) {
