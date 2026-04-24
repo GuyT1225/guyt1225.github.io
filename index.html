@@ -3,29 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fix Copy Paste Formatting Online Free Tool</title>
-  <meta name="description" content="Free online tool to clean copied text, remove hidden characters, fix spacing, remove weird formatting, and prepare text for AI output, documents, email, websites, or IVR voice systems." />
+  <title>PasteLint — Free Online Text Cleaner, Formatter &amp; Linter</title>
+  <meta name="description" content="PasteLint: Free online text cleaner and linter. Remove hidden characters, fix smart quotes, prep for IVR/TTS, apply custom rules, detect paste source, and clean line by line. No login. No upload." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header>
-    <h1>Fix Copy Paste Formatting Instantly</h1>
-    <p class="subtitle">Clean messy text from AI tools, PDFs, Word, websites, email, and IVR/TTS scripts — right in your browser.</p>
+    <div class="header-brand">PasteLint</div>
+    <h1>Clean, Lint &amp; Fix Copied Text — Free &amp; Instant</h1>
+    <p class="subtitle">Smart paste detection &middot; Custom rules &middot; IVR/TTS prep &middot; Line-by-line mode &middot; Session history</p>
   </header>
 
   <main>
 
-    <!-- Cleaning Mode Options -->
-    <section class="options-section" aria-label="Cleaning modes">
-      <h2 class="options-title">Cleaning Modes</h2>
+    <!-- Options: Presets + Cleaning Modes + View Mode -->
+    <section class="options-section" aria-label="Cleaning options">
+
+      <!-- Presets Row -->
+      <div class="presets-row">
+        <span class="options-label">Presets</span>
+        <div class="presets-list" id="presets-list"></div>
+        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+      </div>
+
+      <div class="options-divider"></div>
+
+      <!-- Cleaning Modes -->
+      <div class="options-modes-header">
+        <span class="options-label">Cleaning Modes</span>
+      </div>
       <div class="options-grid">
 
         <label class="option-label">
           <input type="checkbox" id="mode-basic" checked />
           <span class="option-text">
             <strong>Basic Clean</strong>
-            <small>Trim spaces, collapse duplicates, fix smart quotes &amp; dashes, reduce blank lines</small>
+            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
           </span>
         </label>
 
@@ -33,7 +47,7 @@
           <input type="checkbox" id="mode-hidden" checked />
           <span class="option-text">
             <strong>Remove Hidden Characters</strong>
-            <small>Strip zero-width spaces, invisible Unicode, and non-breaking spaces</small>
+            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
           </span>
         </label>
 
@@ -41,27 +55,62 @@
           <input type="checkbox" id="mode-ivr" />
           <span class="option-text">
             <strong>IVR / TTS Mode</strong>
-            <small>Replace &amp; with "and", @ with "at", and simplify symbols for text-to-speech</small>
+            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
           </span>
         </label>
 
       </div>
+
+      <div class="options-divider"></div>
+
+      <!-- View Mode Toggle -->
+      <div class="mode-toggle-row">
+        <span class="options-label">View Mode</span>
+        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+        </div>
+      </div>
+
     </section>
 
-    <!-- Textarea Area -->
-    <section class="textareas-section">
+    <!-- Paragraph Mode: Side-by-side textareas -->
+    <section class="textareas-section" id="paragraph-section">
       <div class="textarea-wrapper">
         <label for="input-text">Paste messy text</label>
         <textarea id="input-text" placeholder="Paste your text here..." spellcheck="false"></textarea>
-        <div class="char-count" id="input-count">0 characters</div>
+        <div class="textarea-footer">
+          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+        </div>
       </div>
 
       <div class="textarea-wrapper">
         <label for="output-text">Cleaned text</label>
         <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
-        <div class="char-count" id="output-count">0 characters</div>
+        <div class="textarea-footer">
+          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+        </div>
       </div>
     </section>
+
+    <!-- Line-by-Line Table (shown below textarea section when in line mode) -->
+    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+      <div class="lines-summary-bar">
+        <span id="lines-summary"></span>
+        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+      </div>
+      <table class="lines-table" aria-label="Line by line comparison">
+        <thead>
+          <tr>
+            <th class="lines-col-num">#</th>
+            <th>Original</th>
+            <th>Cleaned</th>
+            <th class="lines-col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="lines-tbody"></tbody>
+      </table>
+    </div>
 
     <!-- Action Buttons -->
     <section class="buttons-section" aria-label="Actions">
@@ -73,6 +122,15 @@
     </section>
 
     <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <!-- Smart Detection Report -->
+    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+      <div class="report-header">
+        <span class="report-title">What PasteLint Found</span>
+        <span class="report-badge" id="report-badge"></span>
+      </div>
+      <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
 
     <!-- Diff View Panel -->
     <section id="diff-section" class="diff-section" hidden aria-label="Changes view">
@@ -87,7 +145,19 @@
       <div id="diff-output" class="diff-output" aria-live="polite"></div>
     </section>
 
-    <!-- History Panel (rendered by script.js) -->
+    <!-- Custom Rules Panel -->
+    <section class="custom-rules-section" aria-label="Custom find and replace rules">
+      <div class="custom-rules-header">
+        <div>
+          <span class="custom-rules-title">Custom Rules</span>
+          <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+        </div>
+        <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+      </div>
+      <div id="rules-list" class="rules-list"></div>
+    </section>
+
+    <!-- History Panel -->
     <section id="history-section" class="history-section" aria-label="Recent sessions">
       <div class="history-header">
         <span class="history-title">Recent Sessions</span>
@@ -96,32 +166,34 @@
       <div id="history-list" class="history-list"></div>
     </section>
 
-    <!-- SEO Description Text -->
+    <!-- SEO Text -->
     <section class="seo-text">
-      <h2>What This Tool Does</h2>
+      <h2>What PasteLint Does</h2>
       <p>
-        When you copy text from Word documents, PDFs, AI chatbots, emails, or websites, it often carries invisible
-        formatting baggage — extra spaces, non-breaking characters, smart quotes, long dashes, and hidden Unicode
-        characters that can break your layouts, confuse voice systems, or just look wrong.
+        When you copy text from Word, PDFs, AI chatbots, emails, or websites it often carries invisible baggage —
+        extra spaces, non-breaking characters, smart quotes, long dashes, and hidden Unicode that breaks layouts,
+        confuses voice systems, or just looks wrong. PasteLint detects exactly what it found, cleans it all up,
+        and shows you precisely what changed — entirely in your browser.
       </p>
       <p>
-        This free tool cleans all of that up instantly in your browser. No upload required, no account needed.
-        Your text never leaves your device.
+        Need the same fix every time? Save custom find &amp; replace rules that persist between visits.
+        Working with lists or spreadsheet data? Switch to Line-by-Line mode for row-by-row cleaning.
       </p>
-
       <h2>Common Use Cases</h2>
       <ul class="use-cases">
         <li>Fix copy paste formatting from Word or PDFs</li>
-        <li>Clean AI-generated text before pasting into email</li>
+        <li>Clean AI-generated text before pasting into email or CMS</li>
         <li>Remove hidden characters from copied text</li>
         <li>Prepare text for IVR, Amazon Polly, or text-to-speech systems</li>
+        <li>Lint and sanitize content before publishing to a website</li>
+        <li>Bulk-clean rows of data copied from a spreadsheet</li>
       </ul>
     </section>
 
   </main>
 
   <footer>
-    <p>Free text cleaner. No login. No upload. Text is cleaned in your browser.</p>
+    <p>PasteLint &mdash; Free text cleaner &amp; linter. No login. No upload. Everything runs in your browser.</p>
   </footer>
 
   <script src="script.js"></script>
