@@ -589,6 +589,128 @@ main {
 }
 
 /* =============================================
+   TEXT BRIEF / INSIGHT PANEL
+   ============================================= */
+.brief-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.brief-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 1.2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brief-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-text-muted);
+}
+
+.brief-type-badge {
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.65rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+/* Stat chips row */
+.brief-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.85rem 1.2rem 0.6rem;
+}
+
+.brief-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.9rem;
+  min-width: 5.5rem;
+  text-align: center;
+}
+
+.brief-stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.brief-stat-label {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.15rem;
+}
+
+/* Reference / context rows */
+.brief-refs {
+  padding: 0.1rem 1.2rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.brief-ref-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+}
+
+.brief-ref-label {
+  font-weight: 700;
+  color: var(--color-text-muted);
+  min-width: 7rem;
+  flex-shrink: 0;
+  padding-top: 0.05rem;
+}
+
+.brief-ref-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.brief-ref-tag {
+  background: #f1f5f9;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.78rem;
+  color: var(--color-text);
+  word-break: break-all;
+  max-width: 28rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.brief-ref-tag.is-link {
+  color: var(--color-primary);
+}
+
+/* =============================================
    ADVANCED FEATURES COLLAPSIBLE
    ============================================= */
 .advanced-details {

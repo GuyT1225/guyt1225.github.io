@@ -12,7 +12,7 @@
   <header>
     <div class="header-brand">PasteLint</div>
     <h1>Clean, Lint &amp; Fix Copied Text — Free &amp; Instant</h1>
-    <p class="subtitle">Smart paste detection &middot; Custom rules &middot; IVR/TTS prep &middot; Line-by-line mode &middot; Session history</p>
+    <p class="subtitle">Smart paste detection &middot; Text brief &amp; insights &middot; Custom rules &middot; IVR/TTS prep &middot; Line-by-line mode</p>
   </header>
 
   <main>
@@ -130,6 +130,16 @@
         <span class="report-badge" id="report-badge"></span>
       </div>
       <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
+
+    <!-- Text Brief / Insight Panel -->
+    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+      <div class="brief-header">
+        <span class="brief-title">Text Brief</span>
+        <span class="brief-type-badge" id="brief-type-badge"></span>
+      </div>
+      <div class="brief-stats" id="brief-stats"></div>
+      <div class="brief-refs" id="brief-refs"></div>
     </section>
 
     <!-- Advanced Features (collapsible) -->

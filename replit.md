@@ -36,6 +36,13 @@ PasteLint is a zero-cost, static HTML/CSS/JavaScript text cleaning and linting u
 - Changed rows highlighted in amber
 - Per-line copy button + "Copy all cleaned lines"
 
+### Text Brief / Insight Panel
+- Appears after every clean, analyses the raw input text
+- Content-type classifier: Email, Q&A/Chat, Code snippet, List/outline, Article/document, Invoice/table, Meeting notes, General text
+- Stat chips: word count, sentence count, paragraph count, reading time, words/sentence, vocab richness %
+- Reference extraction: URLs, email addresses, dates, phone numbers, citation markers ([1], superscript numbers)
+- All runs in-browser — no API call, no data upload
+
 ### Diff View
 - Toggle "Show Changes" for inline before/after diff
 - Red strikethrough = removed, green highlight = added

@@ -33,6 +33,11 @@ const reportSection = document.getElementById('report-section');
 const reportBadge   = document.getElementById('report-badge');
 const reportList    = document.getElementById('report-list');
 
+const briefSection   = document.getElementById('brief-section');
+const briefTypeBadge = document.getElementById('brief-type-badge');
+const briefStats     = document.getElementById('brief-stats');
+const briefRefs      = document.getElementById('brief-refs');
+
 const diffSection     = document.getElementById('diff-section');
 const diffOutput      = document.getElementById('diff-output');
 const diffSummary     = document.getElementById('diff-summary');
@@ -207,6 +212,137 @@ function renderReport(original) {
 }
 
 // -----------------------------------------------
+// TEXT BRIEF / INSIGHT ANALYSIS
+// -----------------------------------------------
+
+/**
+ * Analyses the raw text and returns structured insight data.
+ * Runs entirely in-browser — no API, no upload.
+ * @param {string} text
+ * @returns {object}
+ */
+function analyzeBrief(text) {
+  const t = text.trim();
+  if (!t) return null;
+
+  // --- Structure ---
+  const wordMatches  = t.match(/\b\w+\b/g) || [];
+  const words        = wordMatches.length;
+  const sentences    = (t.match(/[^.!?\n]+[.!?]+/g) || []).length || 1;
+  const paragraphs   = t.split(/\n\s*\n+/).filter(p => p.trim()).length;
+  const bulletLines  = (t.match(/^\s*[-•*▸◦]\s+.+/gm) || []).length;
+  const numberedLines = (t.match(/^\s*\d+[.)]\s+.+/gm) || []).length;
+  const avgWordsSent = Math.round(words / sentences);
+
+  // Reading time (avg 200 wpm)
+  const readSec = Math.round((words / 200) * 60);
+  let readingTime;
+  if (readSec < 60) readingTime = `${readSec}s`;
+  else readingTime = `${Math.ceil(readSec / 60)} min`;
+
+  // Vocabulary richness
+  const uniqueWords  = new Set(wordMatches.map(w => w.toLowerCase())).size;
+  const vocabPct     = words ? Math.round((uniqueWords / words) * 100) : 0;
+
+  // --- Content-type classification ---
+  let contentType = 'General text';
+  if (/^(From|To|Subject|Date|CC|BCC)\s*:/im.test(t))         contentType = 'Email';
+  else if (/^(Q:|A:|Question:|Answer:|User:|Assistant:)/im.test(t)) contentType = 'Q & A / Chat';
+  else if (/\b(function|const |let |var |class |def |import |#include|<\?php)\b/.test(t)) contentType = 'Code snippet';
+  else if (bulletLines > 3 || numberedLines > 3)                contentType = 'List / outline';
+  else if (paragraphs >= 4 && words > 150)                      contentType = 'Article / document';
+  else if (/\b(invoice|total|due date|qty|item|amount)\b/i.test(t)) contentType = 'Invoice / table';
+  else if (/\b(meeting|agenda|action item|attendee)\b/i.test(t)) contentType = 'Meeting notes';
+
+  // --- References / entities ---
+  const urlMatches   = [...new Set(t.match(/https?:\/\/[^\s"'>)]+/g) || [])];
+  const emailMatches = [...new Set(t.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g) || [])];
+  const dateMatches  = [...new Set(
+    t.match(/\b(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}|\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2},?\s+\d{4})\b/gi) || []
+  )];
+  const phoneMatches = [...new Set(
+    t.match(/(\+?1[\s.\-]?)?(\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]\d{4})/g) || []
+  )];
+  // Citation-style refs: [1], (1), footnote numbers like ¹²
+  const citationCount = (t.match(/\[\d+\]|\(\d+\)|[\u00B9\u00B2\u00B3\u2074-\u2079]/g) || []).length;
+
+  return {
+    words, sentences, paragraphs, avgWordsSent, readingTime,
+    uniqueWords, vocabPct, contentType,
+    urls: urlMatches, emails: emailMatches, dates: dateMatches,
+    phones: phoneMatches, citationCount,
+  };
+}
+
+/**
+ * Renders the Text Brief panel with insight data from analyzeBrief().
+ * @param {string} text  — the original (pre-clean) text
+ */
+function renderBrief(text) {
+  const data = analyzeBrief(text);
+  if (!data || data.words === 0) {
+    briefSection.hidden = true;
+    return;
+  }
+
+  // --- Content type badge ---
+  briefTypeBadge.textContent = data.contentType;
+
+  // --- Stat chips ---
+  const stats = [
+    { value: data.words.toLocaleString(), label: 'Words' },
+    { value: data.sentences.toLocaleString(), label: 'Sentences' },
+    { value: data.paragraphs.toLocaleString(), label: 'Paragraphs' },
+    { value: data.readingTime,                label: 'Read time' },
+    { value: `${data.avgWordsSent}`,           label: 'Wds / sentence' },
+    { value: `${data.vocabPct}%`,              label: 'Vocab richness' },
+  ];
+
+  briefStats.innerHTML = stats.map(s => `
+    <div class="brief-stat">
+      <span class="brief-stat-value">${escapeHtml(String(s.value))}</span>
+      <span class="brief-stat-label">${escapeHtml(s.label)}</span>
+    </div>`).join('');
+
+  // --- Reference rows (only show if found) ---
+  const rows = [];
+
+  if (data.urls.length) {
+    rows.push({ label: 'Links found', items: data.urls, isLink: true, limit: 5 });
+  }
+  if (data.emails.length) {
+    rows.push({ label: 'Email addresses', items: data.emails, isLink: false, limit: 5 });
+  }
+  if (data.dates.length) {
+    rows.push({ label: 'Dates', items: data.dates, isLink: false, limit: 8 });
+  }
+  if (data.phones.length) {
+    rows.push({ label: 'Phone numbers', items: data.phones, isLink: false, limit: 5 });
+  }
+  if (data.citationCount > 0) {
+    rows.push({ label: 'Citations / refs', items: [`${data.citationCount} found`], isLink: false, limit: 1 });
+  }
+
+  briefRefs.innerHTML = rows.map(row => {
+    const shown = row.items.slice(0, row.limit);
+    const extra  = row.items.length - shown.length;
+    const tags   = shown.map(v =>
+      `<span class="brief-ref-tag${row.isLink ? ' is-link' : ''}" title="${escapeHtml(v)}">${escapeHtml(v)}</span>`
+    ).join('');
+    const moreTag = extra > 0
+      ? `<span class="brief-ref-tag" style="color:var(--color-text-muted)">+${extra} more</span>`
+      : '';
+    return `
+      <div class="brief-ref-row">
+        <span class="brief-ref-label">${escapeHtml(row.label)}</span>
+        <span class="brief-ref-values">${tags}${moreTag}</span>
+      </div>`;
+  }).join('');
+
+  briefSection.hidden = false;
+}
+
+// -----------------------------------------------
 // CLEANING LOGIC
 // -----------------------------------------------
 
@@ -299,6 +435,7 @@ btnClean.addEventListener('click', () => {
 
   // Run analysis BEFORE cleaning (analyses raw input)
   renderReport(raw);
+  renderBrief(raw);
 
   const cleaned = cleanText(raw);
   outputText.value = cleaned;
@@ -769,6 +906,7 @@ btnClear.addEventListener('click', () => {
   btnShowDiff.textContent  = 'Show Changes';
   diffSection.hidden       = true;
   reportSection.hidden     = true;
+  briefSection.hidden      = true;
   linesTableWrapper.hidden = true;
 
   inputText.focus();
