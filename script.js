@@ -1039,3 +1039,15 @@ updateCount(outputText, outputCount);
 renderPresets();
 renderRules();
 renderHistory();
+
+// Auto-apply preset specified via data attribute (landing pages)
+// or ?preset= URL parameter (shareable links)
+(function applyStartPreset() {
+  const dataVal = document.body.dataset.defaultPreset || '';
+  const urlVal  = new URLSearchParams(window.location.search).get('preset') || '';
+  const name    = dataVal || urlVal;
+  if (!name) return;
+  const all    = [...BUILTIN_PRESETS, ...loadUserPresets()];
+  const preset = all.find(p => p.name.toLowerCase() === name.toLowerCase());
+  if (preset) applyPreset(preset);
+})();

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clean AI-Generated Text Before Pasting | Remove ChatGPT Formatting | PasteLint</title>
+  <meta name="description" content="Strip smart quotes, em dashes, bullet-point clutter and hidden characters from ChatGPT, Claude, Gemini or Copilot output before pasting into your CMS, email or document. Free, instant, browser-only." />
+  <link rel="canonical" href="ai-text-cleaner.html" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-default-preset="Deep Clean">
+
+  <header>
+    <div class="header-brand"><a href="index.html" style="color:inherit;text-decoration:none">PasteLint</a></div>
+    <h1>Clean AI-Generated Text Before You Paste</h1>
+    <p class="subtitle">Strip ChatGPT &amp; Claude formatting issues · Smart quotes, em dashes &amp; hidden chars · Deep clean · No login</p>
+  </header>
+
+  <main>
+
+    <div class="lp-intro">
+      <span class="lp-intro-icon">🤖</span>
+      <p class="lp-intro-text">
+        <strong>AI output looks fine in the chat window — and then breaks everything else.</strong>
+        ChatGPT, Claude, Gemini and Copilot all produce typographic smart quotes (" "), em dashes (—), non-breaking spaces, and sometimes hidden Unicode that causes encoding errors in CMS platforms, databases, and email clients.
+        <strong>Deep Clean</strong> mode is pre-selected to catch it all.
+      </p>
+    </div>
+
+    <div class="lp-nav">
+      <span class="lp-nav-label">Also fix:</span>
+      <a href="word-paste-cleaner.html">Word copy-paste</a>
+      <a href="pdf-copy-fix.html">PDF copy-paste</a>
+      <a href="ivr-text-prep.html">IVR / TTS text</a>
+      <a href="remove-hidden-characters.html">Hidden characters</a>
+    </div>
+
+    <!-- Options: Presets + Cleaning Modes + View Mode -->
+    <section class="options-section" aria-label="Cleaning options">
+
+      <div class="presets-row">
+        <span class="options-label">Presets</span>
+        <div class="presets-list" id="presets-list"></div>
+        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="options-modes-header">
+        <span class="options-label">Cleaning Modes</span>
+      </div>
+      <div class="options-grid">
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-basic" checked />
+          <span class="option-text">
+            <strong>Basic Clean</strong>
+            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-hidden" checked />
+          <span class="option-text">
+            <strong>Remove Hidden Characters</strong>
+            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-ivr" />
+          <span class="option-text">
+            <strong>IVR / TTS Mode</strong>
+            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="mode-toggle-row">
+        <span class="options-label">View Mode</span>
+        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="textareas-section" id="paragraph-section">
+      <div class="textarea-wrapper">
+        <label for="input-text">Paste AI-generated text here</label>
+        <textarea id="input-text" placeholder="Paste ChatGPT, Claude, Gemini or Copilot output here..." spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+      <div class="textarea-wrapper">
+        <label for="output-text">Cleaned text</label>
+        <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+      <div class="lines-summary-bar">
+        <span id="lines-summary"></span>
+        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+      </div>
+      <table class="lines-table" aria-label="Line by line comparison">
+        <thead>
+          <tr>
+            <th class="lines-col-num">#</th>
+            <th>Original</th>
+            <th>Cleaned</th>
+            <th class="lines-col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="lines-tbody"></tbody>
+      </table>
+    </div>
+
+    <section class="buttons-section" aria-label="Actions">
+      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
+      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
+      <button id="btn-clear" class="btn btn-ghost">Clear</button>
+    </section>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+      <div class="report-header">
+        <span class="report-title">What PasteLint Found</span>
+        <span class="report-badge" id="report-badge"></span>
+      </div>
+      <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
+
+    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+      <div class="brief-header">
+        <span class="brief-title">Text Brief</span>
+        <span class="brief-type-badge" id="brief-type-badge"></span>
+      </div>
+      <div class="brief-stats" id="brief-stats"></div>
+      <div class="brief-refs" id="brief-refs"></div>
+    </section>
+
+    <details class="advanced-details" id="advanced-details">
+      <summary class="advanced-summary">
+        <span class="advanced-summary-label">Advanced Features</span>
+        <span class="advanced-summary-chips">
+          <span class="adv-chip">Show Changes</span>
+          <span class="adv-chip">Custom Rules</span>
+          <span class="adv-chip">Session History</span>
+        </span>
+        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+      </summary>
+      <div class="advanced-body">
+        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+          <div class="diff-header">
+            <span class="diff-title">What Changed</span>
+            <span class="diff-legend">
+              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+              <span class="legend-item"><mark class="diff-added">added</mark></span>
+              <span class="diff-summary" id="diff-summary"></span>
+            </span>
+          </div>
+          <div id="diff-output" class="diff-output" aria-live="polite"></div>
+        </section>
+        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+          <div class="custom-rules-header">
+            <div>
+              <span class="custom-rules-title">Custom Rules</span>
+              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+            </div>
+            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+          </div>
+          <div id="rules-list" class="rules-list"></div>
+        </section>
+        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+          <div class="history-header">
+            <span class="history-title">Recent Sessions</span>
+            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </div>
+    </details>
+
+    <section class="seo-text">
+      <h2>Why AI Text Needs Cleaning Before You Paste</h2>
+      <p>
+        Large language models output typographically rich text: smart quotes, curly apostrophes, em dashes, ellipsis characters,
+        and sometimes invisible formatting. This looks great in the chat interface but causes real problems in Notion, WordPress,
+        Webflow, HubSpot, Salesforce, email clients, and anywhere that processes text programmatically.
+      </p>
+      <p>
+        Deep Clean mode runs all three cleaning layers: normalizes special characters, strips hidden Unicode, and collapses
+        extra whitespace — exactly what you need after copying from a language model.
+      </p>
+      <h2>AI Text Issues PasteLint Fixes</h2>
+      <ul class="use-cases">
+        <li>Smart quotes and curly apostrophes from ChatGPT output</li>
+        <li>Em dashes (—) and ellipsis characters (…) from Claude responses</li>
+        <li>Non-breaking spaces that prevent correct line-wrapping in email</li>
+        <li>Hidden Unicode characters that break CMS imports</li>
+        <li>Inconsistent spacing from Gemini or Copilot multi-paragraph output</li>
+        <li>Save custom rules to consistently clean AI output your way every time</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>PasteLint &mdash; Free text cleaner &amp; linter. No login. No upload. Everything runs in your browser. &middot; <a href="index.html">Home</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

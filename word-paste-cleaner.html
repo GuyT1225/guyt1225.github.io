@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fix Word Copy-Paste Formatting Free | PasteLint</title>
+  <meta name="description" content="Paste text from Microsoft Word or Google Docs and instantly fix smart quotes, extra spaces, weird line breaks, and hidden formatting characters. Free — runs entirely in your browser. No login, no upload." />
+  <link rel="canonical" href="word-paste-cleaner.html" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-default-preset="Email">
+
+  <header>
+    <div class="header-brand"><a href="index.html" style="color:inherit;text-decoration:none">PasteLint</a></div>
+    <h1>Fix Word &amp; Google Docs Copy-Paste Formatting</h1>
+    <p class="subtitle">Smart quotes &rarr; straight · Extra spaces &amp; line breaks removed · Hidden chars stripped · No login · No upload</p>
+  </header>
+
+  <main>
+
+    <div class="lp-intro">
+      <span class="lp-intro-icon">📄</span>
+      <p class="lp-intro-text">
+        <strong>Why does pasted Word text look wrong?</strong>
+        Microsoft Word and Google Docs quietly embed smart quotes (" "), em dashes (—), non-breaking spaces, and invisible Unicode characters that cause layout bugs, CMS errors, and garbled emails. Paste below and PasteLint removes all of it instantly — <strong>Basic Clean + Remove Hidden Characters</strong> are pre-selected for you.
+      </p>
+    </div>
+
+    <div class="lp-nav">
+      <span class="lp-nav-label">Also fix:</span>
+      <a href="pdf-copy-fix.html">PDF copy-paste</a>
+      <a href="ai-text-cleaner.html">AI-generated text</a>
+      <a href="ivr-text-prep.html">IVR / TTS text</a>
+      <a href="remove-hidden-characters.html">Hidden characters</a>
+    </div>
+
+    <!-- Options: Presets + Cleaning Modes + View Mode -->
+    <section class="options-section" aria-label="Cleaning options">
+
+      <div class="presets-row">
+        <span class="options-label">Presets</span>
+        <div class="presets-list" id="presets-list"></div>
+        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="options-modes-header">
+        <span class="options-label">Cleaning Modes</span>
+      </div>
+      <div class="options-grid">
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-basic" checked />
+          <span class="option-text">
+            <strong>Basic Clean</strong>
+            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-hidden" checked />
+          <span class="option-text">
+            <strong>Remove Hidden Characters</strong>
+            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-ivr" />
+          <span class="option-text">
+            <strong>IVR / TTS Mode</strong>
+            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="mode-toggle-row">
+        <span class="options-label">View Mode</span>
+        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="textareas-section" id="paragraph-section">
+      <div class="textarea-wrapper">
+        <label for="input-text">Paste Word / Docs text here</label>
+        <textarea id="input-text" placeholder="Paste your Word or Google Docs text here..." spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+      <div class="textarea-wrapper">
+        <label for="output-text">Cleaned text</label>
+        <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+      <div class="lines-summary-bar">
+        <span id="lines-summary"></span>
+        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+      </div>
+      <table class="lines-table" aria-label="Line by line comparison">
+        <thead>
+          <tr>
+            <th class="lines-col-num">#</th>
+            <th>Original</th>
+            <th>Cleaned</th>
+            <th class="lines-col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="lines-tbody"></tbody>
+      </table>
+    </div>
+
+    <section class="buttons-section" aria-label="Actions">
+      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
+      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
+      <button id="btn-clear" class="btn btn-ghost">Clear</button>
+    </section>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+      <div class="report-header">
+        <span class="report-title">What PasteLint Found</span>
+        <span class="report-badge" id="report-badge"></span>
+      </div>
+      <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
+
+    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+      <div class="brief-header">
+        <span class="brief-title">Text Brief</span>
+        <span class="brief-type-badge" id="brief-type-badge"></span>
+      </div>
+      <div class="brief-stats" id="brief-stats"></div>
+      <div class="brief-refs" id="brief-refs"></div>
+    </section>
+
+    <details class="advanced-details" id="advanced-details">
+      <summary class="advanced-summary">
+        <span class="advanced-summary-label">Advanced Features</span>
+        <span class="advanced-summary-chips">
+          <span class="adv-chip">Show Changes</span>
+          <span class="adv-chip">Custom Rules</span>
+          <span class="adv-chip">Session History</span>
+        </span>
+        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+      </summary>
+      <div class="advanced-body">
+        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+          <div class="diff-header">
+            <span class="diff-title">What Changed</span>
+            <span class="diff-legend">
+              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+              <span class="legend-item"><mark class="diff-added">added</mark></span>
+              <span class="diff-summary" id="diff-summary"></span>
+            </span>
+          </div>
+          <div id="diff-output" class="diff-output" aria-live="polite"></div>
+        </section>
+        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+          <div class="custom-rules-header">
+            <div>
+              <span class="custom-rules-title">Custom Rules</span>
+              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+            </div>
+            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+          </div>
+          <div id="rules-list" class="rules-list"></div>
+        </section>
+        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+          <div class="history-header">
+            <span class="history-title">Recent Sessions</span>
+            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </div>
+    </details>
+
+    <section class="seo-text">
+      <h2>Why Word Copy-Paste Breaks Your Formatting</h2>
+      <p>
+        Microsoft Word, Google Docs, and LibreOffice all use typographic characters that look fine in a word processor
+        but cause chaos elsewhere. Smart quotes (" ") get rendered as &amp;ldquo; in raw HTML. Em dashes (—) appear as
+        strange boxes in some editors. Non-breaking spaces (&amp;nbsp;) prevent text from wrapping correctly and can break
+        search indexing. PasteLint catches and fixes all of these in one click.
+      </p>
+      <p>
+        Working with a CMS like WordPress, Webflow, or HubSpot? Paste into PasteLint first to avoid encoding artifacts.
+        Copying into a code editor or database field? The hidden characters Word inserts will cause validation errors
+        until you strip them out.
+      </p>
+      <h2>Common Word Copy-Paste Problems PasteLint Fixes</h2>
+      <ul class="use-cases">
+        <li>Smart quotes and curly apostrophes replaced with straight ones</li>
+        <li>Em dashes and en dashes normalized to hyphens</li>
+        <li>Non-breaking spaces and zero-width spaces removed</li>
+        <li>Trailing spaces and inconsistent line breaks cleaned up</li>
+        <li>Invisible Unicode and byte-order marks stripped</li>
+        <li>Multiple consecutive blank lines collapsed to single breaks</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>PasteLint &mdash; Free text cleaner &amp; linter. No login. No upload. Everything runs in your browser. &middot; <a href="index.html">Home</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

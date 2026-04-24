@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IVR &amp; TTS Text Cleaner | Prep Text for Voice Systems | PasteLint</title>
+  <meta name="description" content="Convert symbols to spoken words, strip markdown, and sanitize text for Amazon Polly, Google Cloud TTS, Nuance, or any IVR / text-to-speech platform. Free, browser-only, no login required." />
+  <link rel="canonical" href="ivr-text-prep.html" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-default-preset="IVR/TTS">
+
+  <header>
+    <div class="header-brand"><a href="index.html" style="color:inherit;text-decoration:none">PasteLint</a></div>
+    <h1>Prepare Text for IVR, TTS &amp; Voice Systems</h1>
+    <p class="subtitle">Symbols &rarr; spoken words · Strip markdown · Amazon Polly, Nuance, Google TTS · No login · No upload</p>
+  </header>
+
+  <main>
+
+    <div class="lp-intro">
+      <span class="lp-intro-icon">🎙️</span>
+      <p class="lp-intro-text">
+        <strong>IVR and TTS systems read exactly what you give them.</strong>
+        A "&amp;" becomes a literal ampersand sound. A "$50" might get read as "dollar-sign 50". PasteLint's
+        <strong>IVR / TTS Mode</strong> converts symbols (&amp;, @, #, $, %) to their spoken equivalents,
+        strips markdown formatting, and removes hidden characters — all pre-selected and ready to go.
+      </p>
+    </div>
+
+    <div class="lp-nav">
+      <span class="lp-nav-label">Also fix:</span>
+      <a href="word-paste-cleaner.html">Word copy-paste</a>
+      <a href="ai-text-cleaner.html">AI-generated text</a>
+      <a href="pdf-copy-fix.html">PDF copy-paste</a>
+      <a href="remove-hidden-characters.html">Hidden characters</a>
+    </div>
+
+    <!-- Options: Presets + Cleaning Modes + View Mode -->
+    <section class="options-section" aria-label="Cleaning options">
+
+      <div class="presets-row">
+        <span class="options-label">Presets</span>
+        <div class="presets-list" id="presets-list"></div>
+        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="options-modes-header">
+        <span class="options-label">Cleaning Modes</span>
+      </div>
+      <div class="options-grid">
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-basic" checked />
+          <span class="option-text">
+            <strong>Basic Clean</strong>
+            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-hidden" checked />
+          <span class="option-text">
+            <strong>Remove Hidden Characters</strong>
+            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-ivr" />
+          <span class="option-text">
+            <strong>IVR / TTS Mode</strong>
+            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="mode-toggle-row">
+        <span class="options-label">View Mode</span>
+        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="textareas-section" id="paragraph-section">
+      <div class="textarea-wrapper">
+        <label for="input-text">Paste IVR / TTS script here</label>
+        <textarea id="input-text" placeholder="Paste your voice script or TTS text here..." spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+      <div class="textarea-wrapper">
+        <label for="output-text">Voice-ready text</label>
+        <textarea id="output-text" placeholder="Voice-ready output will appear here..." readonly spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+      <div class="lines-summary-bar">
+        <span id="lines-summary"></span>
+        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+      </div>
+      <table class="lines-table" aria-label="Line by line comparison">
+        <thead>
+          <tr>
+            <th class="lines-col-num">#</th>
+            <th>Original</th>
+            <th>Cleaned</th>
+            <th class="lines-col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="lines-tbody"></tbody>
+      </table>
+    </div>
+
+    <section class="buttons-section" aria-label="Actions">
+      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
+      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
+      <button id="btn-clear" class="btn btn-ghost">Clear</button>
+    </section>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+      <div class="report-header">
+        <span class="report-title">What PasteLint Found</span>
+        <span class="report-badge" id="report-badge"></span>
+      </div>
+      <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
+
+    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+      <div class="brief-header">
+        <span class="brief-title">Text Brief</span>
+        <span class="brief-type-badge" id="brief-type-badge"></span>
+      </div>
+      <div class="brief-stats" id="brief-stats"></div>
+      <div class="brief-refs" id="brief-refs"></div>
+    </section>
+
+    <details class="advanced-details" id="advanced-details">
+      <summary class="advanced-summary">
+        <span class="advanced-summary-label">Advanced Features</span>
+        <span class="advanced-summary-chips">
+          <span class="adv-chip">Show Changes</span>
+          <span class="adv-chip">Custom Rules</span>
+          <span class="adv-chip">Session History</span>
+        </span>
+        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+      </summary>
+      <div class="advanced-body">
+        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+          <div class="diff-header">
+            <span class="diff-title">What Changed</span>
+            <span class="diff-legend">
+              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+              <span class="legend-item"><mark class="diff-added">added</mark></span>
+              <span class="diff-summary" id="diff-summary"></span>
+            </span>
+          </div>
+          <div id="diff-output" class="diff-output" aria-live="polite"></div>
+        </section>
+        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+          <div class="custom-rules-header">
+            <div>
+              <span class="custom-rules-title">Custom Rules</span>
+              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+            </div>
+            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+          </div>
+          <div id="rules-list" class="rules-list"></div>
+        </section>
+        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+          <div class="history-header">
+            <span class="history-title">Recent Sessions</span>
+            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </div>
+    </details>
+
+    <section class="seo-text">
+      <h2>Why IVR and TTS Text Needs Special Preparation</h2>
+      <p>
+        Interactive voice response systems and text-to-speech engines are far more literal than human readers.
+        An ampersand (&amp;) spoken aloud might become "ampersand" or be skipped entirely depending on the platform.
+        A dollar sign ($) before a number might confuse the engine into saying "dollar-sign" instead of "dollars".
+        Asterisks (*), underscores (_), and hashtags (#) can all produce unexpected audio output.
+      </p>
+      <p>
+        PasteLint's IVR / TTS Mode replaces common problematic symbols with their plain-English equivalents,
+        strips markdown formatting characters, and removes hidden characters — giving you clean text that reads
+        exactly as intended when spoken.
+      </p>
+      <h2>IVR / TTS Platforms PasteLint Helps With</h2>
+      <ul class="use-cases">
+        <li>Amazon Polly and Amazon Connect voice prompts</li>
+        <li>Google Cloud Text-to-Speech scripts</li>
+        <li>Microsoft Azure Cognitive Services TTS</li>
+        <li>Nuance and Avaya IVR script preparation</li>
+        <li>Twilio voice messaging and call flow scripts</li>
+        <li>Any platform requiring plain, symbol-free spoken text</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>PasteLint &mdash; Free text cleaner &amp; linter. No login. No upload. Everything runs in your browser. &middot; <a href="index.html">Home</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

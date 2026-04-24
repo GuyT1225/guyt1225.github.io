@@ -65,10 +65,23 @@ PasteLint is a zero-cost, static HTML/CSS/JavaScript text cleaning and linting u
 - `pastelint_presets` — user-saved presets
 - `pastelint_rules` — custom find & replace rules
 
-## SEO
+## SEO & Landing Pages
+
+### Main page (index.html)
 - Title: "PasteLint — Free Online Text Cleaner, Formatter & Linter"
 - H1: "Clean, Lint & Fix Copied Text — Free & Instant"
-- Target keywords: text cleaner online, paste formatter, remove hidden characters, text linter, IVR text cleaner
+
+### Landing pages (preset auto-selected via `data-default-preset` on `<body>`)
+| File | Preset | Target keywords |
+|---|---|---|
+| `word-paste-cleaner.html` | Email | fix Word copy paste formatting |
+| `ai-text-cleaner.html` | Deep Clean | clean AI generated text, remove ChatGPT formatting |
+| `ivr-text-prep.html` | IVR/TTS | IVR text cleaner, TTS text prep, Amazon Polly |
+| `pdf-copy-fix.html` | Deep Clean | fix PDF copy paste, remove PDF formatting |
+| `remove-hidden-characters.html` | Email | remove hidden characters, zero-width spaces |
+
+Each page has: unique title, meta description, H1, intro callout, cross-links to sibling pages, unique SEO section.
+Preset auto-selection also works via `?preset=Name` URL param on any page.
 
 ## Workflow
 - Served via `python3 -m http.server 5000` (no build step required)

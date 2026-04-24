@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fix PDF Copy-Paste Problems | Remove PDF Formatting Artifacts | PasteLint</title>
+  <meta name="description" content="Fix garbled line breaks, remove soft hyphens, strip hidden Unicode and clean up spacing problems when copying text from a PDF. Free, instant, browser-only. No login or upload required." />
+  <link rel="canonical" href="pdf-copy-fix.html" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-default-preset="Deep Clean">
+
+  <header>
+    <div class="header-brand"><a href="index.html" style="color:inherit;text-decoration:none">PasteLint</a></div>
+    <h1>Fix PDF Copy-Paste Problems Instantly</h1>
+    <p class="subtitle">Garbled line breaks · Soft hyphens · Hidden Unicode · Spacing artifacts · All fixed · No login · No upload</p>
+  </header>
+
+  <main>
+
+    <div class="lp-intro">
+      <span class="lp-intro-icon">📑</span>
+      <p class="lp-intro-text">
+        <strong>PDF copy-paste is notoriously broken.</strong>
+        PDFs encode text with fixed line breaks, soft hyphens (­), non-breaking spaces, ligature characters (ﬁ, ﬂ),
+        and other artifacts that get dumped into your clipboard when you copy. PasteLint's
+        <strong>Deep Clean</strong> mode strips hidden characters, normalizes whitespace, and fixes common encoding issues
+        — paste below and get clean text in one click.
+      </p>
+    </div>
+
+    <div class="lp-nav">
+      <span class="lp-nav-label">Also fix:</span>
+      <a href="word-paste-cleaner.html">Word copy-paste</a>
+      <a href="ai-text-cleaner.html">AI-generated text</a>
+      <a href="ivr-text-prep.html">IVR / TTS text</a>
+      <a href="remove-hidden-characters.html">Hidden characters</a>
+    </div>
+
+    <!-- Options: Presets + Cleaning Modes + View Mode -->
+    <section class="options-section" aria-label="Cleaning options">
+
+      <div class="presets-row">
+        <span class="options-label">Presets</span>
+        <div class="presets-list" id="presets-list"></div>
+        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="options-modes-header">
+        <span class="options-label">Cleaning Modes</span>
+      </div>
+      <div class="options-grid">
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-basic" checked />
+          <span class="option-text">
+            <strong>Basic Clean</strong>
+            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-hidden" checked />
+          <span class="option-text">
+            <strong>Remove Hidden Characters</strong>
+            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
+          </span>
+        </label>
+
+        <label class="option-label">
+          <input type="checkbox" id="mode-ivr" />
+          <span class="option-text">
+            <strong>IVR / TTS Mode</strong>
+            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
+          </span>
+        </label>
+
+      </div>
+
+      <div class="options-divider"></div>
+
+      <div class="mode-toggle-row">
+        <span class="options-label">View Mode</span>
+        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="textareas-section" id="paragraph-section">
+      <div class="textarea-wrapper">
+        <label for="input-text">Paste PDF text here</label>
+        <textarea id="input-text" placeholder="Paste text copied from a PDF here..." spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+      <div class="textarea-wrapper">
+        <label for="output-text">Cleaned text</label>
+        <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
+        <div class="textarea-footer">
+          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+      <div class="lines-summary-bar">
+        <span id="lines-summary"></span>
+        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+      </div>
+      <table class="lines-table" aria-label="Line by line comparison">
+        <thead>
+          <tr>
+            <th class="lines-col-num">#</th>
+            <th>Original</th>
+            <th>Cleaned</th>
+            <th class="lines-col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="lines-tbody"></tbody>
+      </table>
+    </div>
+
+    <section class="buttons-section" aria-label="Actions">
+      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
+      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
+      <button id="btn-clear" class="btn btn-ghost">Clear</button>
+    </section>
+
+    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+      <div class="report-header">
+        <span class="report-title">What PasteLint Found</span>
+        <span class="report-badge" id="report-badge"></span>
+      </div>
+      <ul class="report-list" id="report-list" aria-live="polite"></ul>
+    </section>
+
+    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+      <div class="brief-header">
+        <span class="brief-title">Text Brief</span>
+        <span class="brief-type-badge" id="brief-type-badge"></span>
+      </div>
+      <div class="brief-stats" id="brief-stats"></div>
+      <div class="brief-refs" id="brief-refs"></div>
+    </section>
+
+    <details class="advanced-details" id="advanced-details">
+      <summary class="advanced-summary">
+        <span class="advanced-summary-label">Advanced Features</span>
+        <span class="advanced-summary-chips">
+          <span class="adv-chip">Show Changes</span>
+          <span class="adv-chip">Custom Rules</span>
+          <span class="adv-chip">Session History</span>
+        </span>
+        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+      </summary>
+      <div class="advanced-body">
+        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+          <div class="diff-header">
+            <span class="diff-title">What Changed</span>
+            <span class="diff-legend">
+              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+              <span class="legend-item"><mark class="diff-added">added</mark></span>
+              <span class="diff-summary" id="diff-summary"></span>
+            </span>
+          </div>
+          <div id="diff-output" class="diff-output" aria-live="polite"></div>
+        </section>
+        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+          <div class="custom-rules-header">
+            <div>
+              <span class="custom-rules-title">Custom Rules</span>
+              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+            </div>
+            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+          </div>
+          <div id="rules-list" class="rules-list"></div>
+        </section>
+        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+          <div class="history-header">
+            <span class="history-title">Recent Sessions</span>
+            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+          </div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+      </div>
+    </details>
+
+    <section class="seo-text">
+      <h2>Why PDF Copy-Paste Text Is So Messy</h2>
+      <p>
+        PDFs are a display format, not a text format. When a PDF is rendered, text is laid out at fixed positions
+        on the page. When you copy from a PDF reader, the software attempts to reconstruct the original text flow,
+        but it frequently inserts extra line breaks at the end of every printed line, soft hyphens
+        (U+00AD) that were used for hyphenation, non-breaking spaces where the typesetter needed fixed spacing,
+        and sometimes ligature characters like ﬁ (fi) and ﬂ (fl) that don't match ordinary letter sequences.
+      </p>
+      <p>
+        The result is text that looks correct when read but fails in databases, search indexes, CMS systems,
+        and anywhere that processes text character-by-character. PasteLint's Deep Clean removes all of this invisibly.
+      </p>
+      <h2>Common PDF Copy-Paste Issues PasteLint Fixes</h2>
+      <ul class="use-cases">
+        <li>Mid-word line breaks caused by PDF fixed-layout text extraction</li>
+        <li>Soft hyphen characters (­) that appear or disappear depending on context</li>
+        <li>Non-breaking spaces that prevent correct word-wrapping</li>
+        <li>Runs of extra whitespace from column-based PDF layouts</li>
+        <li>Smart quotes and typographic dashes from publisher PDFs</li>
+        <li>Invisible Unicode control characters embedded in PDF text streams</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>PasteLint &mdash; Free text cleaner &amp; linter. No login. No upload. Everything runs in your browser. &middot; <a href="index.html">Home</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

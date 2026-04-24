@@ -1145,6 +1145,62 @@ mark.diff-added {
 }
 
 /* =============================================
+   LANDING PAGE INTRO CALLOUT
+   ============================================= */
+.lp-intro {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius);
+  padding: 0.9rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.lp-intro-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.lp-intro-text {
+  font-size: 0.9rem;
+  color: #1e3a5f;
+  line-height: 1.6;
+}
+
+.lp-intro-text strong { color: #1d4ed8; }
+
+/* "Other tools" nav bar on landing pages */
+.lp-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+}
+
+.lp-nav-label {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.lp-nav a {
+  color: var(--color-primary);
+  text-decoration: none;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  border-radius: 999px;
+  padding: 0.15rem 0.65rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.lp-nav a:hover { background: #dbeafe; }
+
+/* =============================================
    FOOTER
    ============================================= */
 footer {
