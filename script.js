@@ -10,6 +10,10 @@ const outputCount = document.getElementById('output-count');
 const btnClean    = document.getElementById('btn-clean');
 const btnCopy     = document.getElementById('btn-copy');
 const btnClear    = document.getElementById('btn-clear');
+const btnShowDiff = document.getElementById('btn-show-diff');
+const diffSection = document.getElementById('diff-section');
+const diffOutput  = document.getElementById('diff-output');
+const diffSummary = document.getElementById('diff-summary');
 const copyFeedback = document.getElementById('copy-feedback');
 
 const modeBasic  = document.getElementById('mode-basic');
@@ -146,12 +150,24 @@ btnClean.addEventListener('click', () => {
   if (!raw.trim()) {
     outputText.value = '';
     updateCount(outputText, outputCount);
+    // Reset diff state
+    btnShowDiff.disabled = true;
+    diffSection.hidden = true;
+    btnShowDiff.textContent = 'Show Changes';
     return;
   }
 
   const cleaned = cleanText(raw);
   outputText.value = cleaned;
   updateCount(outputText, outputCount);
+
+  // Enable the diff button now that we have a before/after pair
+  btnShowDiff.disabled = false;
+
+  // If diff panel was already open, refresh it automatically
+  if (!diffSection.hidden) {
+    renderDiff(raw, cleaned);
+  }
 });
 
 // --- Button: Copy Output ---
@@ -211,6 +227,174 @@ function showFeedback(message) {
     copyFeedback.textContent = '';
   }, 2500);
 }
+
+// --- Button: Show / Hide Changes (Diff View) ---
+btnShowDiff.addEventListener('click', () => {
+  const isHidden = diffSection.hidden;
+
+  if (isHidden) {
+    // Build and show the diff
+    renderDiff(inputText.value, outputText.value);
+    diffSection.hidden = false;
+    btnShowDiff.textContent = 'Hide Changes';
+  } else {
+    // Hide the diff panel
+    diffSection.hidden = true;
+    btnShowDiff.textContent = 'Show Changes';
+  }
+});
+
+// --- Diff Engine ---
+
+/**
+ * Tokenizes text into an array of word and whitespace chunks.
+ * This preserves all spacing so the diff output looks natural.
+ * @param {string} text
+ * @returns {string[]}
+ */
+function tokenize(text) {
+  return text.match(/[^\s]+|\s+/g) || [];
+}
+
+/**
+ * Computes the Longest Common Subsequence (LCS) length table
+ * between two token arrays. Used as the basis for diffing.
+ * @param {string[]} a - "before" tokens
+ * @param {string[]} b - "after" tokens
+ * @returns {number[][]} LCS table
+ */
+function lcsTable(a, b) {
+  const m = a.length;
+  const n = b.length;
+  // Initialise a (m+1) x (n+1) table filled with 0
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  return dp;
+}
+
+/**
+ * Iteratively backtracks through the LCS table to produce a list of diff
+ * operations. Each operation is { type: 'equal'|'remove'|'add', text }.
+ * Iterative version avoids call-stack overflow for large token arrays.
+ * @param {number[][]} dp - LCS table
+ * @param {string[]} a - "before" tokens
+ * @param {string[]} b - "after" tokens
+ * @returns {{ type: string, text: string }[]}
+ */
+function backtrack(dp, a, b) {
+  const ops = [];
+  let i = a.length;
+  let j = b.length;
+
+  while (i > 0 || j > 0) {
+    if (i === 0) {
+      ops.push({ type: 'add',    text: b[--j] });
+    } else if (j === 0) {
+      ops.push({ type: 'remove', text: a[--i] });
+    } else if (a[i - 1] === b[j - 1]) {
+      ops.push({ type: 'equal',  text: a[i - 1] });
+      i--; j--;
+    } else if (dp[i - 1][j] >= dp[i][j - 1]) {
+      ops.push({ type: 'remove', text: a[--i] });
+    } else {
+      ops.push({ type: 'add',    text: b[--j] });
+    }
+  }
+
+  // The loop builds ops in reverse order; flip it
+  ops.reverse();
+  return ops;
+}
+
+/**
+ * Safely escapes text for insertion as HTML so angle brackets etc.
+ * are never interpreted as markup.
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/**
+ * Renders the diff between the original and cleaned text into the diff panel.
+ * Falls back to a simple "no changes" message when texts are identical.
+ * @param {string} original - The raw input text
+ * @param {string} cleaned  - The cleaned output text
+ */
+function renderDiff(original, cleaned) {
+  // Nothing to diff
+  if (original === cleaned) {
+    diffOutput.innerHTML = '<span class="diff-no-changes">No changes were made — the text was already clean.</span>';
+    diffSummary.textContent = '';
+    return;
+  }
+
+  // For very large texts, cap token count to avoid UI freeze
+  const MAX_TOKENS = 2000;
+  const aTokens = tokenize(original);
+  const bTokens = tokenize(cleaned);
+
+  if (aTokens.length > MAX_TOKENS || bTokens.length > MAX_TOKENS) {
+    // Fallback: simple character-count summary without inline diff
+    diffOutput.innerHTML = '<span class="diff-no-changes">Text is too long for inline diff. See the cleaned output above.</span>';
+    const delta = original.length - cleaned.length;
+    diffSummary.textContent = delta > 0
+      ? `${delta.toLocaleString()} character${delta !== 1 ? 's' : ''} removed`
+      : `${Math.abs(delta).toLocaleString()} character${Math.abs(delta) !== 1 ? 's' : ''} added`;
+    return;
+  }
+
+  // Compute diff
+  const dp   = lcsTable(aTokens, bTokens);
+  const ops  = backtrack(dp, aTokens, bTokens);
+
+  // Build HTML and count changes
+  let removedCount = 0;
+  let addedCount   = 0;
+  let html = '';
+
+  for (const op of ops) {
+    const safe = escapeHtml(op.text);
+    if (op.type === 'equal') {
+      html += safe;
+    } else if (op.type === 'remove') {
+      removedCount++;
+      html += `<mark class="diff-removed">${safe}</mark>`;
+    } else if (op.type === 'add') {
+      addedCount++;
+      html += `<mark class="diff-added">${safe}</mark>`;
+    }
+  }
+
+  diffOutput.innerHTML = html;
+
+  // Summary line
+  const parts = [];
+  if (removedCount > 0) parts.push(`${removedCount} token${removedCount !== 1 ? 's' : ''} removed`);
+  if (addedCount   > 0) parts.push(`${addedCount} token${addedCount !== 1 ? 's' : ''} added`);
+  diffSummary.textContent = parts.join(', ');
+}
+
+// --- Clear also resets diff state ---
+btnClear.addEventListener('click', () => {
+  diffSection.hidden = true;
+  btnShowDiff.textContent = 'Show Changes';
+  btnShowDiff.disabled = true;
+}, { capture: false });
 
 // --- Initial count display ---
 updateCount(inputText, inputCount);

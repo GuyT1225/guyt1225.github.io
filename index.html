@@ -67,10 +67,24 @@
     <section class="buttons-section" aria-label="Actions">
       <button id="btn-clean" class="btn btn-primary">Clean Text</button>
       <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
       <button id="btn-clear" class="btn btn-ghost">Clear</button>
     </section>
 
     <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+    <!-- Diff View Panel -->
+    <section id="diff-section" class="diff-section" hidden aria-label="Changes view">
+      <div class="diff-header">
+        <span class="diff-title">What Changed</span>
+        <span class="diff-legend">
+          <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+          <span class="legend-item"><mark class="diff-added">added</mark></span>
+          <span class="diff-summary" id="diff-summary"></span>
+        </span>
+      </div>
+      <div id="diff-output" class="diff-output" aria-live="polite"></div>
+    </section>
 
     <!-- SEO Description Text -->
     <section class="seo-text">
