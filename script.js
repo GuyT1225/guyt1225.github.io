@@ -1058,3 +1058,27 @@ function copyOutput() {
   const preset = all.find(p => p.name.toLowerCase() === name.toLowerCase());
   if (preset) applyPreset(preset);
 })();
+
+// -----------------------------------------------
+// Theme switcher
+// -----------------------------------------------
+const themeButtons = document.querySelectorAll("[data-theme]");
+const savedTheme = localStorage.getItem("pastelint-theme") || "light";
+
+function applyTheme(theme) {
+  document.body.classList.remove("theme-light", "theme-dark", "theme-terminal");
+  document.body.classList.add(`theme-${theme}`);
+  localStorage.setItem("pastelint-theme", theme);
+
+  themeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.theme === theme);
+  });
+}
+
+themeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    applyTheme(button.dataset.theme);
+  });
+});
+
+applyTheme(savedTheme);
