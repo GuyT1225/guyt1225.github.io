@@ -198,7 +198,93 @@ body.theme-terminal h2,
 body.theme-terminal h3 {
   text-shadow: 0 0 8px rgba(34, 197, 94, 0.35);
 }
+/* Terminal mode enhancements */
+body.theme-terminal {
+  font-family: "Courier New", Consolas, Monaco, monospace;
+}
 
+/* subtle CRT scanline overlay */
+body.theme-terminal::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.08;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(134, 239, 172, 0.12) 0px,
+    rgba(134, 239, 172, 0.12) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+/* terminal command prompt badge */
+body.theme-terminal .tool-badge::before {
+  content: "> ";
+}
+
+body.theme-terminal .tool-badge {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #86efac;
+}
+
+/* glowing terminal panels */
+body.theme-terminal .options-section,
+body.theme-terminal .seo-text,
+body.theme-terminal .tool-card,
+body.theme-terminal .advanced-details,
+body.theme-terminal .report-section,
+body.theme-terminal .brief-section {
+  background: rgba(2, 20, 10, 0.88);
+  border-color: rgba(34, 197, 94, 0.28);
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.06);
+}
+
+/* terminal textareas */
+body.theme-terminal textarea {
+  background: #020403;
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.35);
+  box-shadow: inset 0 0 16px rgba(34, 197, 94, 0.05);
+}
+
+body.theme-terminal textarea::placeholder {
+  color: rgba(134, 239, 172, 0.45);
+}
+
+/* terminal buttons */
+body.theme-terminal .btn-primary {
+  background: #16a34a;
+  color: #020403;
+}
+
+body.theme-terminal .btn-secondary,
+body.theme-terminal .btn-ghost {
+  background: rgba(20, 83, 45, 0.7);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+body.theme-terminal .btn:hover,
+body.theme-terminal .tool-card:hover {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.14);
+}
+
+/* blinking cursor after main headline */
+body.theme-terminal h1::after {
+  content: "_";
+  margin-left: 6px;
+  animation: terminalBlink 1s steps(1) infinite;
+}
+
+@keyframes terminalBlink {
+  50% {
+    opacity: 0;
+  }
+}
 /* --- Main Container --- */
 main {
    flex: 1;
