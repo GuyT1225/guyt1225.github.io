@@ -126,6 +126,79 @@ header h1 {
 .theme-toggle button:hover {
   background: rgba(255,255,255,0.9);
 }
+/* Active button */
+.theme-toggle button.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+/* Dark theme */
+body.theme-dark {
+  --color-bg: #0f172a;
+  --color-surface: #111827;
+  --color-border: #334155;
+  --color-primary: #60a5fa;
+  --color-primary-hover: #3b82f6;
+  --color-secondary: #475569;
+  --color-secondary-hover: #64748b;
+  --color-ghost: #1e293b;
+  --color-ghost-hover: #334155;
+  --color-text: #e5e7eb;
+  --color-text-muted: #94a3b8;
+
+  background:
+    radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 32rem),
+    radial-gradient(circle at top right, rgba(129, 140, 248, 0.12), transparent 28rem),
+    var(--color-bg);
+}
+
+/* Terminal theme */
+body.theme-terminal {
+  --color-bg: #020403;
+  --color-surface: #06120b;
+  --color-border: #14532d;
+  --color-primary: #22c55e;
+  --color-primary-hover: #16a34a;
+  --color-secondary: #166534;
+  --color-secondary-hover: #15803d;
+  --color-ghost: #052e16;
+  --color-ghost-hover: #14532d;
+  --color-text: #86efac;
+  --color-text-muted: #4ade80;
+
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 30rem),
+    linear-gradient(to bottom, #020403, #031007);
+}
+
+/* Adjust surfaces for dark/terminal */
+body.theme-dark main,
+body.theme-terminal main {
+  background: rgba(17, 24, 39, 0.82);
+}
+
+body.theme-terminal main {
+  box-shadow: 0 0 28px rgba(34, 197, 94, 0.08);
+}
+
+/* Inputs + cards adapt */
+body.theme-dark textarea,
+body.theme-terminal textarea,
+body.theme-dark .tool-card,
+body.theme-terminal .tool-card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Terminal glow */
+body.theme-terminal h1,
+body.theme-terminal h2,
+body.theme-terminal h3 {
+  text-shadow: 0 0 8px rgba(34, 197, 94, 0.35);
+}
+
 /* --- Main Container --- */
 main {
    flex: 1;
