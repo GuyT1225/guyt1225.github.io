@@ -1,5 +1,62 @@
 # PasteLint
 
+## Clean Text for Everybody
+
+PasteLint is a free, privacy-first text cleaning toolkit designed to fix copy-paste formatting issues and make text usable anywhere.
+
+It helps clean text copied from PDFs, Word documents, websites, AI tools, and messaging apps — all directly in the browser with no login and no uploads.
+
+---
+
+## Core Features
+
+- Fix copy-paste formatting
+- Remove hidden characters (zero-width spaces, non-breaking spaces, Unicode artifacts)
+- Clean text from PDFs and Word documents
+- Normalize spacing and punctuation
+- Prepare text for IVR and text-to-speech systems
+- Clean AI-generated text output
+
+---
+
+## Privacy First
+
+PasteLint runs entirely in the browser.
+
+- No data is uploaded
+- No text is stored
+- No tracking of input content
+
+---
+
+## Project Structure
+
+PasteLint is a static web application built with:
+
+- HTML (landing pages and tool interfaces)
+- CSS (shared styling)
+- JavaScript (text cleaning logic)
+
+Each page targets a specific use case while reusing a shared cleaning engine.
+
+---
+
+## Goal
+
+PasteLint is designed as a scalable, low-maintenance utility site:
+
+- Each page targets a specific search problem
+- All tools run client-side (no backend required)
+- New tools can be added quickly using the same core logic
+
+---
+
+## Vision
+
+To provide a simple, reliable, and accessible set of tools for cleaning and preparing text for real-world use — including documents, communication, and voice systems.
+
+Plain text that works everywhere.# PasteLint
+
 ## Overview
 PasteLint is a zero-cost, static HTML/CSS/JavaScript text cleaning and linting utility. All processing runs entirely in the browser. No backend, no database, no login. Originally built as "Fix Copy Paste Formatting," renamed to PasteLint for stronger SEO and brand recognition in the dev/tech community.
 
