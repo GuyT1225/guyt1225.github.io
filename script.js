@@ -1042,6 +1042,11 @@ renderPresets();
 renderRules();
 renderHistory();
 
+function copyOutput() {
+  let text = document.getElementById("output").innerText;
+  navigator.clipboard.writeText(text);
+}
+
 // Auto-apply preset specified via data attribute (landing pages)
 // or ?preset= URL parameter (shareable links)
 (function applyStartPreset() {
