@@ -245,10 +245,10 @@ body.theme-terminal .brief-section {
 
 /* terminal textareas */
 body.theme-terminal textarea {
-  background: #020403;
+  background: #010302;
   color: #86efac;
   border-color: rgba(34, 197, 94, 0.35);
-  box-shadow: inset 0 0 16px rgba(34, 197, 94, 0.05);
+  box-shadow: inset 0 0 18px rgba(34, 197, 94, 0.06);
 }
 
 body.theme-terminal textarea::placeholder {
@@ -284,6 +284,23 @@ body.theme-terminal h1::after {
   50% {
     opacity: 0;
   }
+}
+/* Terminal header override */
+body.theme-terminal header {
+  background: linear-gradient(to bottom, #020403, #031007);
+  border-bottom: 1px solid rgba(34, 197, 94, 0.25);
+}
+/* Fix all remaining light panels */
+body.theme-terminal .advanced-summary,
+body.theme-terminal .custom-rules-header,
+body.theme-terminal .history-header,
+body.theme-terminal .diff-header,
+body.theme-terminal .lines-summary-bar {
+  background: rgba(3, 12, 7, 0.85);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+body.theme-terminal * {
+  scrollbar-color: #22c55e #020403;
 }
 /* --- Main Container --- */
 main {
