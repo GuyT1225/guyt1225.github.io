@@ -1873,3 +1873,28 @@ body.light::before {
 
   background-size: 24px 24px;
 }
+/* ========================================
+   CARD SYSTEM POLISH
+   ======================================== */
+
+body.light .rodan-panel,
+body.light .tool-card,
+body.light .featured-tool-card,
+body.light .options-section,
+body.light .textareas-section {
+  border-radius: 20px;
+  transition: all 0.18s ease;
+}
+
+/* subtle hover lift */
+body.light .tool-card:hover,
+body.light .featured-tool-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+}
+
+/* featured card slight emphasis */
+body.light .featured-tool-card {
+  border: 1px solid #e2d4ad;
+  background: #fff8e8;
+}
