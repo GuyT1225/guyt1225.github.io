@@ -1,117 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rodan Human Rewrite Tool | PasteLint</title>
-<meta name="description" content="Rewrite AI-sounding text into natural, human writing. Browser-only. No login. No upload.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background:#f8fafc;
-  color:#0f172a;
-}
-textarea {
-  width:100%;
-  height:220px;
-  margin-top:10px;
-  padding:10px;
-}
-button {
-  margin-top:10px;
-  padding:10px 14px;
-  cursor:pointer;
-}
-.output {
-  margin-top:20px;
-  padding:15px;
-  border:1px solid #ccc;
-}
-small {
-  color:#64748b;
-}
-</style>
+  <title>Rodan — Human Rewrite Tool | PasteLint</title>
+  <meta name="description" content="Rodan by PasteLint rewrites stiff, generic, or AI-sounding text into clearer, more natural human writing. Browser-only. No login. No upload." />
+  <link rel="canonical" href="https://guyt1225.github.io/rodan-human-rewrite.html" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Rodan page polish — uses PasteLint theme classes when available */
+    .tool-hero {
+      max-width: 980px;
+      margin: 0 auto 28px;
+      text-align: center;
+    }
+
+    .tool-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      border: 1px solid var(--border-color, #d8dee8);
+      background: var(--card-bg, #ffffff);
+      color: var(--accent-color, #2563eb);
+    }
+
+    .tool-hero h1 {
+      margin: 0;
+      font-size: clamp(2.8rem, 8vw, 6.8rem);
+      line-height: 0.86;
+      letter-spacing: -0.08em;
+    }
+
+    .tool-hero .subtitle {
+      max-width: 760px;
+      margin: 22px auto 0;
+      font-size: 1.08rem;
+      line-height: 1.6;
+    }
+
+    .tool-note {
+      max-width: 740px;
+      margin: 14px auto 0;
+      color: var(--muted-text, #64748b);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .rodan-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(330px, 0.85fr);
+      gap: 22px;
+      align-items: start;
+      margin-top: 28px;
+    }
+
+    .rodan-panel {
+      background: var(--card-bg, #ffffff);
+      border: 1px solid var(--border-color, #d8dee8);
+      border-radius: 20px;
+      box-shadow: var(--shadow, 0 16px 40px rgba(15,23,42,0.08));
+      padding: 22px;
+    }
+
+    .rodan-panel h2,
+    .rodan-panel h3 {
+      margin-top: 0;
+      letter-spacing: -0.03em;
+    }
+
+    .rodan-panel label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .rodan-textarea {
+      width: 100%;
+      min-height: 320px;
+      resize: vertical;
+      padding: 16px;
+      border-radius: 16px;
+      font: inherit;
+      line-height: 1.55;
+    }
+
+    .rodan-output {
+      min-height: 260px;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color, #d8dee8);
+      background: var(--input-bg, #ffffff);
+      color: var(--text-color, #111827);
+    }
+
+    .rodan-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .rodan-select {
+      border: 1px solid var(--border-color, #d8dee8);
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: var(--input-bg, #ffffff);
+      color: var(--text-color, #111827);
+      font-weight: 700;
+    }
+
+    .score-card {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 18px;
+      background: var(--soft-bg, rgba(37,99,235,0.08));
+      border: 1px solid var(--border-color, #d8dee8);
+      margin-bottom: 18px;
+    }
+
+    .score-ring {
+      width: 92px;
+      height: 92px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--accent-color, #2563eb) 0deg, var(--accent-color, #2563eb) 0deg, #dbe3ef 0deg 360deg);
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .score-ring::after {
+      content: "";
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      border-radius: 999px;
+      background: var(--card-bg, #ffffff);
+    }
+
+    .score-number {
+      position: relative;
+      z-index: 1;
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .score-copy strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
+    .score-copy span {
+      color: var(--muted-text, #64748b);
+      line-height: 1.4;
+      font-size: 0.94rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-color, #d8dee8);
+      background: var(--soft-bg, #f1f5f9);
+      color: var(--text-color, #111827);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .change-list {
+      margin: 8px 0 18px;
+      padding-left: 20px;
+      color: var(--text-color, #111827);
+    }
+
+    .change-list li {
+      margin: 8px 0;
+      line-height: 1.45;
+    }
+
+    .tool-warning {
+      margin-top: 12px;
+      color: var(--muted-text, #64748b);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .mini-box {
+      border: 1px solid var(--border-color, #d8dee8);
+      border-radius: 16px;
+      padding: 14px;
+      background: var(--soft-bg, #f8fafc);
+      min-height: 130px;
+    }
+
+    .mini-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .mini-box div {
+      white-space: pre-wrap;
+      color: var(--muted-text, #64748b);
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .related-tools {
+      margin-top: 36px;
+    }
+
+    @media (max-width: 900px) {
+      .rodan-layout,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-hero h1 {
+        font-size: clamp(3rem, 17vw, 5.4rem);
+      }
+    }
+  </style>
 </head>
 
 <body>
+<header class="hero">
+  <div class="theme-toggle">
+    <button data-theme="light">Light</button>
+    <button data-theme="dark">Dark</button>
+    <button data-theme="terminal">Terminal</button>
+  </div>
 
-<h1>Rodan</h1>
-<p><strong>Human Rewrite Tool</strong></p>
+  <div class="header-brand">
+    <a href="index.html" style="color:inherit;text-decoration:none">PasteLint</a>
+  </div>
+</header>
 
-<p>Rewrite AI-sounding text into something natural, clear, and human.</p>
+<main>
+  <section class="tool-hero">
+    <div class="tool-kicker">Human rewrite tool</div>
+    <h1>Rodan</h1>
+    <p class="subtitle">
+      Rewrite stiff, generic, or AI-sounding text into something natural, clear, and human.
+    </p>
+    <p class="tool-note">
+      Inspired by a real human-editing checklist. Not an AI detector. Rodan rewrites style, not facts.
+    </p>
+  </section>
 
-<p><small>Inspired by a real human-editing checklist. Not an AI detector.</small></p>
+  <section class="rodan-layout" aria-label="Rodan human rewrite tool">
+    <div class="rodan-panel">
+      <label for="inputText">Paste text to rewrite</label>
+      <textarea id="inputText" class="rodan-textarea" placeholder="Paste AI-sounding text, a rough email, a LinkedIn paragraph, a product blurb, or a draft response..." spellcheck="false"></textarea>
 
-<textarea id="input" placeholder="Paste text here..."></textarea>
+      <div class="rodan-controls">
+        <button id="rewriteButton" class="btn btn-primary">Rewrite with Rodan</button>
+        <select id="modeSelect" class="rodan-select" aria-label="Rewrite mode">
+          <option value="natural">Natural</option>
+          <option value="concise">More concise</option>
+          <option value="formal">More formal</option>
+          <option value="casual">More casual</option>
+          <option value="direct">More direct</option>
+          <option value="plain">Plain English</option>
+          <option value="founder">Founder tone</option>
+          <option value="killai">Kill AI Voice</option>
+          <option value="personal">Make it sound like me</option>
+          <option value="spoken">Spoken / read aloud</option>
+          <option value="email">Email polish</option>
+          <option value="tts">IVR / TTS friendly</option>
+        </select>
+        <button id="sampleButton" class="btn btn-secondary">Try Sample</button>
+        <button id="clearButton" class="btn btn-ghost">Clear</button>
+      </div>
 
-<br>
+      <p class="tool-warning">
+        Browser-only. No login. No upload. Review before using, especially for factual or professional text.
+      </p>
 
-<select id="mode">
-  <option value="natural">Natural</option>
-  <option value="concise">More concise</option>
-  <option value="formal">More formal</option>
-  <option value="casual">More casual</option>
-  <option value="direct">More direct</option>
-  <option value="plain">Plain English</option>
-  <option value="founder">Founder tone</option>
-  <option value="killai">Kill AI Voice</option>
-  <option value="personal">Make it sound like me</option>
-</select>
+      <div class="mini-grid">
+        <div class="mini-box">
+          <strong>Original</strong>
+          <div id="originalPreview">Your original text will appear here.</div>
+        </div>
+        <div class="mini-box">
+          <strong>Rodan rewrite</strong>
+          <div id="rewritePreview">Your rewritten text will appear here.</div>
+        </div>
+      </div>
+    </div>
 
-<br>
+    <aside class="rodan-panel">
+      <div class="score-card">
+        <div class="score-ring" id="scoreRing">
+          <span class="score-number" id="scoreNumber">--</span>
+        </div>
+        <div class="score-copy">
+          <strong id="scoreTitle">Ready to clean</strong>
+          <span id="scoreSummary">Paste text and run Rodan.</span>
+        </div>
+      </div>
 
-<button onclick="rewrite()">Rewrite</button>
+      <h3>AI-sounding patterns found</h3>
+      <div class="chips" id="aiPhrases">
+        <span class="chip">None yet</span>
+      </div>
 
-<div class="output" id="output"></div>
+      <h3>What changed</h3>
+      <ul class="change-list" id="changeList">
+        <li>No rewrite yet.</li>
+      </ul>
 
-<p><small>Review for accuracy. Rodan rewrites style, not facts.</small></p>
+      <h3>Final rewrite</h3>
+      <div class="rodan-output" id="finalRewrite">Your rewritten text will appear here.</div>
 
+      <div class="rodan-controls">
+        <button id="copyButton" class="btn btn-secondary">Copy Rewrite</button>
+        <span id="copyStatus" class="copy-feedback" aria-live="polite"></span>
+      </div>
+    </aside>
+  </section>
+
+  <section class="seo-text">
+    <h2>What Rodan Does</h2>
+    <p>
+      Rodan helps clean up writing that feels too generic, too polished, or too obviously generated by an AI tool.
+      It looks for common AI tells, removes filler, simplifies inflated wording, and keeps the original meaning intact.
+    </p>
+    <p>
+      It is useful for emails, short posts, product copy, internal notes, public updates, IVR scripts, and drafts that need to sound more natural before publishing.
+    </p>
+  </section>
+
+  <section class="tools-grid-section related-tools">
+    <h2>Related Tools</h2>
+    <div class="tool-grid">
+      <a class="tool-card" href="/ai-text-cleaner.html">
+        <h3>Clean AI Text</h3>
+        <p>Fix spacing, formatting, and structure issues in AI-generated text.</p>
+      </a>
+
+      <a class="tool-card" href="/prompt-linter.html">
+        <h3>Prompt Linter</h3>
+        <p>Check prompts for clarity, missing context, vague wording, and output instructions.</p>
+      </a>
+
+      <a class="tool-card" href="/fix-copy-paste-formatting.html">
+        <h3>Fix Copy Paste Formatting</h3>
+        <p>Clean messy text copied from websites, emails, PDFs, Word, and AI tools.</p>
+      </a>
+
+      <a class="tool-card" href="/ivr-text-prep.html">
+        <h3>IVR and TTS Text Prep</h3>
+        <p>Prepare text for phone menus, Amazon Polly, Google TTS, and voice systems.</p>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>
+    PasteLint &mdash; Free text cleaner and linter. No login. No upload. Everything runs in your browser.
+  </p>
+
+  <h4>Related tools</h4>
+  <p>
+    <a href="/rodan-human-rewrite.html">Rodan Human Rewrite Tool</a> |
+    <a href="/prompt-linter.html">Prompt Linter</a> |
+    <a href="/ai-text-cleaner.html">Clean AI Text</a> |
+    <a href="/fix-copy-paste-formatting.html">Fix Copy Paste Formatting</a> |
+    <a href="/remove-hidden-characters.html">Remove Hidden Characters</a> |
+    <a href="/ivr-text-prep.html">IVR Text Prep</a>
+  </p>
+
+  <h4>Legal</h4>
+  <p>
+    <a href="/privacy-policy.html">Privacy Policy</a> |
+    <a href="/terms.html">Terms</a> |
+    <a href="/contact.html">Contact</a>
+  </p>
+</footer>
+
+<script src="script.js"></script>
 <script>
-function rewrite() {
-  let text = document.getElementById("input").value;
+  const inputText = document.getElementById("inputText");
+  const rewriteButton = document.getElementById("rewriteButton");
+  const sampleButton = document.getElementById("sampleButton");
+  const clearButton = document.getElementById("clearButton");
+  const copyButton = document.getElementById("copyButton");
+  const modeSelect = document.getElementById("modeSelect");
 
-  if (!text) {
-    document.getElementById("output").innerText = "Paste text first.";
-    return;
+  const scoreNumber = document.getElementById("scoreNumber");
+  const scoreRing = document.getElementById("scoreRing");
+  const scoreTitle = document.getElementById("scoreTitle");
+  const scoreSummary = document.getElementById("scoreSummary");
+  const aiPhrases = document.getElementById("aiPhrases");
+  const changeList = document.getElementById("changeList");
+  const finalRewrite = document.getElementById("finalRewrite");
+  const originalPreview = document.getElementById("originalPreview");
+  const rewritePreview = document.getElementById("rewritePreview");
+  const copyStatus = document.getElementById("copyStatus");
+
+  const replacements = [
+    ["delve into", "explain"],
+    ["leverage", "use"],
+    ["utilize", "use"],
+    ["facilitate", "help"],
+    ["empower", "help"],
+    ["robust", "solid"],
+    ["seamless", "smooth"],
+    ["transformative", "useful"],
+    ["groundbreaking", "new"],
+    ["pivotal", "important"],
+    ["paramount", "important"],
+    ["myriad", "many"],
+    ["holistic", "complete"],
+    ["in order to", "to"],
+    ["due to the fact that", "because"],
+    ["it is important to note that", ""],
+    ["it is worth noting that", ""],
+    ["with that being said", ""],
+    ["in conclusion", ""],
+    ["to sum up", ""],
+    ["great question", ""],
+    ["excellent point", ""],
+    ["i hope this helps", ""],
+    ["happy to help", ""],
+    ["here's the kicker", ""],
+    ["here's where it gets interesting", ""],
+    ["in today's world", ""],
+    ["plays a crucial role in", "helps"],
+    ["serves as a testament to", "shows"]
+  ];
+
+  const modeNotes = {
+    natural: "Kept the tone natural and direct.",
+    concise: "Cut extra words and tightened the phrasing.",
+    formal: "Kept the writing polished without making it stiff.",
+    casual: "Made the tone more relaxed.",
+    direct: "Made the point clearer and less padded.",
+    plain: "Simplified the language.",
+    founder: "Gave the text a clearer, more opinionated product-builder tone.",
+    killai: "Removed common AI-sounding phrases.",
+    personal: "Kept the rewrite more conversational and less generic.",
+    spoken: "Smoothed the rhythm for reading aloud.",
+    email: "Removed common email padding.",
+    tts: "Cleaned phrasing for IVR and text-to-speech use."
+  };
+
+  function escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
-  let cleaned = text;
-
-  // simple cleanup rules
-  cleaned = cleaned.replace(/delve into/gi, "explain");
-  cleaned = cleaned.replace(/leverage/gi, "use");
-  cleaned = cleaned.replace(/utilize/gi, "use");
-  cleaned = cleaned.replace(/in order to/gi, "to");
-  cleaned = cleaned.replace(/it is important to note that/gi, "");
-  cleaned = cleaned.replace(/great question/gi, "");
-  cleaned = cleaned.replace(/in conclusion/gi, "");
-
-  // tone adjustments
-  let mode = document.getElementById("mode").value;
-
-  if (mode === "concise") {
-    cleaned = cleaned.replace(/very|really|just/gi, "");
+  function findPatterns(text) {
+    const lower = text.toLowerCase();
+    return [...new Set(replacements.filter(([bad]) => lower.includes(bad)).map(([bad]) => bad))];
   }
 
-  if (mode === "direct") {
-    cleaned = cleaned.replace(/might be able to/gi, "can");
+  function cleanText(text, mode) {
+    let out = text;
+    const changes = [];
+
+    replacements.forEach(([bad, good]) => {
+      const regex = new RegExp("\\b" + escapeRegex(bad) + "\\b", "gi");
+      if (regex.test(out)) {
+        out = out.replace(regex, good);
+        changes.push("Removed or replaced “" + bad + ".”");
+      }
+    });
+
+    out = out
+      .replace(/\bThis tool boasts\b/gi, "This tool has")
+      .replace(/\bserves as\b/gi, "is")
+      .replace(/\bcommence\b/gi, "start")
+      .replace(/\bascertain\b/gi, "check")
+      .replace(/\benable users to\b/gi, "let users")
+      .replace(/\bdesigned to help users\b/gi, "helps users")
+      .replace(/\bprovides users with\b/gi, "gives users")
+      .replace(/\bthrough the use of\b/gi, "using");
+
+    if (mode === "concise") {
+      out = out.replace(/\b(very|really|just|actually)\b/gi, "");
+      changes.push("Cut filler words.");
+    }
+
+    if (mode === "direct") {
+      out = out.replace(/\bmight be able to\b/gi, "can");
+      out = out.replace(/\bconsider\b/gi, "use");
+      changes.push("Made tentative language more direct.");
+    }
+
+    if (mode === "plain" || mode === "killai") {
+      out = out.replace(/\bcomplexities\b/gi, "details");
+      out = out.replace(/\bimplement\b/gi, "use");
+      changes.push("Simplified inflated wording.");
+    }
+
+    if (mode === "casual" || mode === "personal") {
+      out = out.replace(/\btherefore\b/gi, "so");
+      out = out.replace(/\bhowever\b/gi, "but");
+      out = out.replace(/\badditionally\b/gi, "also");
+      changes.push("Made the tone more conversational.");
+    }
+
+    if (mode === "formal") {
+      out = out.replace(/\bkinda\b/gi, "somewhat");
+      out = out.replace(/\bgonna\b/gi, "going to");
+      out = out.replace(/\bwanna\b/gi, "want to");
+      changes.push("Cleaned up casual wording.");
+    }
+
+    if (mode === "founder") {
+      out = out.replace(/\bThis can be useful\b/gi, "This is useful");
+      out = out.replace(/\bmay help\b/gi, "helps");
+      changes.push("Made the stance stronger.");
+    }
+
+    if (mode === "spoken" || mode === "tts") {
+      out = out.replace(/&/g, " and ");
+      out = out.replace(/@/g, " at ");
+      out = out.replace(/[*_{}[\]|<>~^]/g, "");
+      out = out.replace(/\binfo\b/gi, "information");
+      out = out.replace(/\bASAP\b/g, "as soon as possible");
+      changes.push("Smoothed text for spoken delivery.");
+    }
+
+    if (mode === "email") {
+      out = out.replace(/\bI hope this email finds you well\.?\s*/gi, "");
+      out = out.replace(/\bI just wanted to\b/gi, "I wanted to");
+      changes.push("Removed common email padding.");
+    }
+
+    out = out
+      .replace(/\s+,/g, ",")
+      .replace(/\s+\./g, ".")
+      .replace(/\.{2,}/g, ".")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+    if (!out) out = text.trim();
+
+    if (changes.length === 0) changes.push("No obvious AI tells found. Kept the original mostly intact.");
+    changes.push(modeNotes[mode] || modeNotes.natural);
+
+    return { out, changes: [...new Set(changes)] };
   }
 
-  if (mode === "plain") {
-    cleaned = cleaned.replace(/facilitate/gi, "help");
+  function getScore(text, found) {
+    if (!text.trim()) return 0;
+    let score = 92;
+    score -= Math.min(48, found.length * 7);
+
+    const longSentences = text.split(/[.!?]/).filter(s => s.trim().split(/\s+/).length > 30).length;
+    score -= Math.min(18, longSentences * 6);
+
+    const exclamations = (text.match(/!/g) || []).length;
+    score -= Math.min(12, exclamations * 3);
+
+    return Math.max(5, Math.min(100, Math.round(score)));
   }
 
-  if (mode === "killai") {
-    cleaned = cleaned.replace(/robust|seamless|transformative/gi, "");
+  function renderRodan() {
+    const text = inputText.value.trim();
+    const mode = modeSelect.value;
+
+    if (!text) {
+      scoreNumber.textContent = "--";
+      scoreTitle.textContent = "Ready to clean";
+      scoreSummary.textContent = "Paste text and run Rodan.";
+      scoreRing.style.background = "conic-gradient(var(--accent-color, #2563eb) 0deg, var(--accent-color, #2563eb) 0deg, #dbe3ef 0deg 360deg)";
+      aiPhrases.innerHTML = '<span class="chip">None yet</span>';
+      changeList.innerHTML = "<li>No rewrite yet.</li>";
+      finalRewrite.textContent = "Your rewritten text will appear here.";
+      originalPreview.textContent = "Your original text will appear here.";
+      rewritePreview.textContent = "Your rewritten text will appear here.";
+      return;
+    }
+
+    const found = findPatterns(text);
+    const result = cleanText(text, mode);
+    const score = getScore(text, found);
+    const deg = Math.round((score / 100) * 360);
+
+    scoreNumber.textContent = score;
+    scoreRing.style.background = "conic-gradient(var(--accent-color, #2563eb) 0deg, var(--accent-color, #2563eb) " + deg + "deg, #dbe3ef " + deg + "deg 360deg)";
+
+    if (score >= 82) {
+      scoreTitle.textContent = "Mostly human";
+      scoreSummary.textContent = "The text already sounds fairly natural.";
+    } else if (score >= 58) {
+      scoreTitle.textContent = "Needs cleanup";
+      scoreSummary.textContent = "Some phrasing sounds generic or over-polished.";
+    } else {
+      scoreTitle.textContent = "Sounds AI-ish";
+      scoreSummary.textContent = "Rodan found several templated or inflated phrases.";
+    }
+
+    aiPhrases.innerHTML = found.length
+      ? found.map(p => '<span class="chip">' + p + '</span>').join("")
+      : '<span class="chip">None detected</span>';
+
+    changeList.innerHTML = result.changes.map(c => "<li>" + c + "</li>").join("");
+    finalRewrite.textContent = result.out;
+    originalPreview.textContent = text;
+    rewritePreview.textContent = result.out;
+    copyStatus.textContent = "";
   }
 
-  cleaned = cleaned.replace(/\s{2,}/g, " ").trim();
+  rewriteButton.addEventListener("click", renderRodan);
+  modeSelect.addEventListener("change", renderRodan);
 
-  document.getElementById("output").innerText = cleaned;
-}
+  sampleButton.addEventListener("click", () => {
+    inputText.value = "Great question! In today's world, AI tools play a crucial role in helping users leverage robust workflows and unlock transformative value. This article delves into the evolving landscape of productivity and explores how seamless systems can empower people to do more with less.";
+    modeSelect.value = "natural";
+    renderRodan();
+  });
+
+  clearButton.addEventListener("click", () => {
+    inputText.value = "";
+    renderRodan();
+  });
+
+  copyButton.addEventListener("click", async () => {
+    const text = finalRewrite.textContent;
+    if (!text || text === "Your rewritten text will appear here.") return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      copyStatus.textContent = "Copied.";
+    } catch {
+      copyStatus.textContent = "Copy failed. Select the text manually.";
+    }
+  });
+
+  inputText.addEventListener("input", () => {
+    if (inputText.value.trim().length > 40) renderRodan();
+  });
+
+  renderRodan();
 </script>
-
 </body>
 </html>
