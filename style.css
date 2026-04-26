@@ -1959,3 +1959,67 @@ body.light header.hero p.subtitle-small,
 header.hero p.subtitle-small {
   color: #eaf2ff !important;
 }
+/* Retro CRT hero bezel */
+header.hero {
+  position: relative;
+  max-width: 980px;
+  margin: 32px auto 0 auto;
+  padding: 34px 36px 44px;
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, #6b6257 0%, #2e2d2b 18%, #111827 48%, #3f3a33 100%);
+  box-shadow:
+    inset 0 0 0 10px #4b443b,
+    inset 0 0 0 18px #171717,
+    0 28px 70px rgba(0, 0, 0, 0.28);
+}
+
+/* CRT “screen” layer */
+header.hero::before {
+  content: "";
+  position: absolute;
+  inset: 24px 34px 34px;
+  border-radius: 28px / 20px;
+  background:
+    radial-gradient(circle at center, rgba(82, 130, 255, 0.95), rgba(42, 72, 180, 0.92) 58%, rgba(12, 23, 64, 0.96) 100%);
+  box-shadow:
+    inset 0 0 38px rgba(255, 255, 255, 0.18),
+    inset 0 0 70px rgba(0, 0, 0, 0.48);
+  z-index: 0;
+}
+
+/* Subtle scanlines */
+header.hero::after {
+  content: "";
+  position: absolute;
+  inset: 24px 34px 34px;
+  border-radius: 28px / 20px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.055) 0px,
+    rgba(255,255,255,0.055) 1px,
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 4px
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Keep hero content above CRT screen */
+header.hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Little faux power light */
+header.hero .header-brand::after {
+  content: "";
+  display: block;
+  width: 9px;
+  height: 9px;
+  margin: 14px auto 0;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 10px #22c55e;
+}
