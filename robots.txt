@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://guyt1225.github.io/sitemap.xml
+Sitemap: https://guyt1225.github.io/sitemap-v2.xml
