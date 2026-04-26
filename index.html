@@ -1,21 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta name="google-site-verification" content="qWRlig9zqgl0u2ZTPdFg64jCFXlMoG2fJagXr2LUvyI" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>PasteLint — Clean Text for Everybody</title>
-  <meta name="description" content="PasteLint is a free, privacy-first text cleaning toolkit. Fix copy-paste formatting, remove hidden characters, clean AI text, and prepare text for documents, email, websites, IVR, and text-to-speech. No login. No upload. Everything runs in your browser." />
+  <meta name="description" content="PasteLint is a free, privacy-first text cleaning toolkit. Fix copy-paste formatting, remove hidden characters, clean AI text, humanize AI-sounding writing with Rodan, and prepare text for documents, email, websites, IVR, and text-to-speech. No login. No upload. Everything runs in your browser." />
 
   <link rel="canonical" href="https://guyt1225.github.io/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://guyt1225.github.io/" />
   <meta property="og:title" content="PasteLint — Clean Text for Everybody" />
-  <meta property="og:description" content="A free, privacy-first toolkit for cleaning copied text, removing hidden characters, fixing formatting, and preparing text for documents, AI output, IVR, and text-to-speech." />
+  <meta property="og:description" content="A free, privacy-first toolkit for cleaning copied text, removing hidden characters, fixing formatting, humanizing AI-sounding writing, and preparing text for documents, AI output, IVR, and text-to-speech." />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="PasteLint — Clean Text for Everybody" />
-  <meta name="twitter:description" content="Clean copied text, remove hidden characters, fix formatting, and prepare text for documents, AI output, IVR, and text-to-speech. No login. No upload." />
+  <meta name="twitter:description" content="Clean copied text, remove hidden characters, fix formatting, humanize AI-sounding writing, and prepare text for documents, AI output, IVR, and text-to-speech. No login. No upload." />
 
   <meta name="author" content="PasteLint" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -27,7 +29,7 @@
     "@type": "WebApplication",
     "name": "PasteLint",
     "url": "https://guyt1225.github.io/",
-    "description": "PasteLint is a free, privacy-first text cleaning toolkit for fixing copy-paste formatting, removing hidden characters, cleaning AI text, and preparing text for documents, email, websites, IVR, and text-to-speech.",
+    "description": "PasteLint is a free, privacy-first text cleaning toolkit for fixing copy-paste formatting, removing hidden characters, cleaning AI text, humanizing AI-sounding writing, and preparing text for documents, email, websites, IVR, and text-to-speech.",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires JavaScript",
@@ -45,14 +47,17 @@
       "Fix copy-paste formatting",
       "Remove hidden characters",
       "Clean AI-generated text",
+      "Rewrite AI-sounding text with Rodan",
       "Fix PDF and Word paste issues",
       "Prepare text for IVR and text-to-speech",
       "Apply custom find and replace rules",
       "Compare text changes"
     ]
   }
-    
   </script>
+</head>
+
+<body>
 <header class="hero">
 
   <div class="theme-toggle">
@@ -76,263 +81,283 @@
   </p>
 </header>
 
-  <main>
-<section>
-  <h2>Clean Your Text</h2>
-</section>
-    <!-- Options: Presets + Cleaning Modes + View Mode -->
-    <section class="options-section" aria-label="Cleaning options">
+<main>
 
-      <!-- Presets Row -->
-      <div class="presets-row">
-        <span class="options-label">Presets</span>
-        <div class="presets-list" id="presets-list"></div>
-        <button id="btn-save-preset" class="btn-link">+ Save current</button>
+  <section class="featured-tool-section">
+    <h2>Featured Tool</h2>
+
+    <a class="featured-tool-card tool-card" href="/rodan-human-rewrite.html">
+      <div>
+        <p class="featured-kicker">New</p>
+        <h3>Rodan — Human Rewrite Tool</h3>
+        <p>
+          Rewrite stiff, AI-sounding text into something natural, clear, and human.
+          Rodan focuses on plain language, better rhythm, and fewer generic AI tells.
+        </p>
       </div>
-
-      <div class="options-divider"></div>
-
-      <!-- Cleaning Modes -->
-      <div class="options-modes-header">
-        <span class="options-label">Cleaning Modes</span>
-      </div>
-      <div class="options-grid">
-
-        <label class="option-label">
-          <input type="checkbox" id="mode-basic" checked />
-          <span class="option-text">
-            <strong>Basic Clean</strong>
-            <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
-          </span>
-        </label>
-
-        <label class="option-label">
-          <input type="checkbox" id="mode-hidden" checked />
-          <span class="option-text">
-            <strong>Remove Hidden Characters</strong>
-            <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
-          </span>
-        </label>
-
-        <label class="option-label">
-          <input type="checkbox" id="mode-ivr" />
-          <span class="option-text">
-            <strong>IVR / TTS Mode</strong>
-            <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
-          </span>
-        </label>
-
-      </div>
-
-      <div class="options-divider"></div>
-
-      <!-- View Mode Toggle -->
-      <div class="mode-toggle-row">
-        <span class="options-label">View Mode</span>
-        <div class="mode-toggle" role="radiogroup" aria-label="View mode">
-          <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
-          <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- Paragraph Mode: Side-by-side textareas -->
-    <section class="textareas-section" id="paragraph-section">
-      <div class="textarea-wrapper">
-        <label for="input-text">Paste messy text</label>
-        <textarea id="input-text" placeholder="Paste your text here..." spellcheck="false"></textarea>
-        <div class="textarea-footer">
-          <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
-        </div>
-      </div>
-
-      <div class="textarea-wrapper">
-        <label for="output-text">Cleaned text</label>
-        <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
-        <div class="textarea-footer">
-          <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Line-by-Line Table (shown below textarea section when in line mode) -->
-    <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
-      <div class="lines-summary-bar">
-        <span id="lines-summary"></span>
-        <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
-      </div>
-      <table class="lines-table" aria-label="Line by line comparison">
-        <thead>
-          <tr>
-            <th class="lines-col-num">#</th>
-            <th>Original</th>
-            <th>Cleaned</th>
-            <th class="lines-col-action"></th>
-          </tr>
-        </thead>
-        <tbody id="lines-tbody"></tbody>
-      </table>
-    </div>
-
-    <!-- Action Buttons -->
-    <section class="buttons-section" aria-label="Actions">
-      <button id="btn-clean" class="btn btn-primary">Clean Text</button>
-      <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
-      <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
-      <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
-      <button id="btn-clear" class="btn btn-ghost">Clear</button>
-    </section>
-
-    <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
-
-    <!-- Smart Detection Report -->
-    <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
-      <div class="report-header">
-        <span class="report-title">What PasteLint Found</span>
-        <span class="report-badge" id="report-badge"></span>
-      </div>
-      <ul class="report-list" id="report-list" aria-live="polite"></ul>
-    </section>
-
-    <!-- Text Brief / Insight Panel -->
-    <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
-      <div class="brief-header">
-        <span class="brief-title">Text Brief</span>
-        <span class="brief-type-badge" id="brief-type-badge"></span>
-      </div>
-      <div class="brief-stats" id="brief-stats"></div>
-      <div class="brief-refs" id="brief-refs"></div>
-    </section>
-
-    <!-- Advanced Features (collapsible) -->
-    <details class="advanced-details" id="advanced-details">
-      <summary class="advanced-summary">
-        <span class="advanced-summary-label">Advanced Features</span>
-        <span class="advanced-summary-chips">
-          <span class="adv-chip">Show Changes</span>
-          <span class="adv-chip">Custom Rules</span>
-          <span class="adv-chip">Session History</span>
-        </span>
-        <span class="advanced-summary-arrow" aria-hidden="true">›</span>
-      </summary>
-
-      <div class="advanced-body">
-
-        <!-- Diff View Panel -->
-        <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
-          <div class="diff-header">
-            <span class="diff-title">What Changed</span>
-            <span class="diff-legend">
-              <span class="legend-item"><mark class="diff-removed">removed</mark></span>
-              <span class="legend-item"><mark class="diff-added">added</mark></span>
-              <span class="diff-summary" id="diff-summary"></span>
-            </span>
-          </div>
-          <div id="diff-output" class="diff-output" aria-live="polite"></div>
-        </section>
-
-        <!-- Custom Rules Panel -->
-        <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
-          <div class="custom-rules-header">
-            <div>
-              <span class="custom-rules-title">Custom Rules</span>
-              <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
-            </div>
-            <button id="btn-add-rule" class="btn-link">+ Add rule</button>
-          </div>
-          <div id="rules-list" class="rules-list"></div>
-        </section>
-
-        <!-- History Panel -->
-        <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
-          <div class="history-header">
-            <span class="history-title">Recent Sessions</span>
-            <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
-          </div>
-          <div id="history-list" class="history-list"></div>
-        </section>
-
-      </div>
-    </details>
-
-    <!-- SEO Text -->
-    <section class="seo-text">
-      <h2>What PasteLint Does</h2>
-      <p>
-        When you copy text from Word, PDFs, AI chatbots, emails, or websites it often carries invisible baggage —
-        extra spaces, non-breaking characters, smart quotes, long dashes, and hidden Unicode that breaks layouts,
-        confuses voice systems, or just looks wrong. PasteLint detects exactly what it found, cleans it all up,
-        and shows you precisely what changed — entirely in your browser.
-      </p>
-      <p>
-        Need the same fix every time? Save custom find &amp; replace rules that persist between visits.
-        Working with lists or spreadsheet data? Switch to Line-by-Line mode for row-by-row cleaning.
-      </p>
-      <h2>Common Use Cases</h2>
-      <ul class="use-cases">
-        <li>Fix copy paste formatting from Word or PDFs</li>
-        <li>Clean AI-generated text before pasting into email or CMS</li>
-        <li>Remove hidden characters from copied text</li>
-        <li>Prepare text for IVR, Amazon Polly, or text-to-speech systems</li>
-        <li>Lint and sanitize content before publishing to a website</li>
-        <li>Bulk-clean rows of data copied from a spreadsheet</li>
-      </ul>
-    </section>
-
-<section class="tools-grid-section">
-  <h2>Text Cleaning Tools</h2>
-  <p>
-    Choose the tool that best matches the kind of text problem you are trying to fix.
-  </p>
-
-  <div class="tool-grid">
-    <a class="tool-card" href="/fix-copy-paste-formatting.html">
-      <h3>Fix Copy Paste Formatting</h3>
-      <p>Clean messy text copied from websites, emails, PDFs, Word, and AI tools.</p>
+      <span class="featured-arrow" aria-hidden="true">→</span>
     </a>
-
-    <a class="tool-card" href="/remove-hidden-characters.html">
-      <h3>Remove Hidden Characters</h3>
-      <p>Remove zero-width spaces, non-breaking spaces, invisible Unicode, and copy-paste artifacts.</p>
-    </a>
-
-    <a class="tool-card" href="/ai-text-cleaner.html">
-      <h3>Clean AI Text</h3>
-      <p>Fix spacing, formatting, and structure issues in AI-generated text.</p>
-    </a>
-
-    <a class="tool-card" href="/pdf-copy-fix.html">
-      <h3>Fix PDF Copy Issues</h3>
-      <p>Remove awkward line breaks, soft hyphens, hidden characters, and spacing issues from PDF text.</p>
-    </a>
-
-    <a class="tool-card" href="/word-paste-cleaner.html">
-      <h3>Clean Word and Google Docs Text</h3>
-      <p>Fix smart quotes, extra spaces, line breaks, and hidden formatting from document text.</p>
-    </a>
-
-    <a class="tool-card" href="/ivr-text-prep.html">
-      <h3>Prepare Text for IVR and TTS</h3>
-      <p>Clean and simplify text for Amazon Polly, Google TTS, Nuance, and voice systems.</p>
-    </a>
-
-    <a class="tool-card" href="/remove-line-breaks.html">
-      <h3>Remove Line Breaks</h3>
-      <p>Clean broken lines from PDFs, emails, copied documents, and AI-generated text.</p>
-    </a>
-    
-  </div>
-</section>
+  </section>
 
   <section>
-  <h2>Private by Design</h2>
-  <p>
-    PasteLint processes text locally in your browser. Your text is not uploaded, stored, or sent to a server.
-  </p>
-</section>
-    
-  </main>
+    <h2>Clean Your Text</h2>
+  </section>
+
+  <!-- Options: Presets + Cleaning Modes + View Mode -->
+  <section class="options-section" aria-label="Cleaning options">
+
+    <!-- Presets Row -->
+    <div class="presets-row">
+      <span class="options-label">Presets</span>
+      <div class="presets-list" id="presets-list"></div>
+      <button id="btn-save-preset" class="btn-link">+ Save current</button>
+    </div>
+
+    <div class="options-divider"></div>
+
+    <!-- Cleaning Modes -->
+    <div class="options-modes-header">
+      <span class="options-label">Cleaning Modes</span>
+    </div>
+    <div class="options-grid">
+
+      <label class="option-label">
+        <input type="checkbox" id="mode-basic" checked />
+        <span class="option-text">
+          <strong>Basic Clean</strong>
+          <small>Trim spaces, fix smart quotes &amp; dashes, reduce blank lines</small>
+        </span>
+      </label>
+
+      <label class="option-label">
+        <input type="checkbox" id="mode-hidden" checked />
+        <span class="option-text">
+          <strong>Remove Hidden Characters</strong>
+          <small>Strip zero-width spaces, invisible Unicode, non-breaking spaces</small>
+        </span>
+      </label>
+
+      <label class="option-label">
+        <input type="checkbox" id="mode-ivr" />
+        <span class="option-text">
+          <strong>IVR / TTS Mode</strong>
+          <small>Replace &amp;, @, symbols with spoken words for text-to-speech</small>
+        </span>
+      </label>
+
+    </div>
+
+    <div class="options-divider"></div>
+
+    <!-- View Mode Toggle -->
+    <div class="mode-toggle-row">
+      <span class="options-label">View Mode</span>
+      <div class="mode-toggle" role="radiogroup" aria-label="View mode">
+        <button id="toggle-paragraph" class="mode-toggle-btn active" role="radio" aria-checked="true">Paragraph</button>
+        <button id="toggle-lines" class="mode-toggle-btn" role="radio" aria-checked="false">Line by Line</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Paragraph Mode: Side-by-side textareas -->
+  <section class="textareas-section" id="paragraph-section">
+    <div class="textarea-wrapper">
+      <label for="input-text">Paste messy text</label>
+      <textarea id="input-text" placeholder="Paste your text here..." spellcheck="false"></textarea>
+      <div class="textarea-footer">
+        <span class="char-count" id="input-count">0 words &middot; 0 characters</span>
+      </div>
+    </div>
+
+    <div class="textarea-wrapper">
+      <label for="output-text">Cleaned text</label>
+      <textarea id="output-text" placeholder="Cleaned text will appear here..." readonly spellcheck="false"></textarea>
+      <div class="textarea-footer">
+        <span class="char-count" id="output-count">0 words &middot; 0 characters</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Line-by-Line Table -->
+  <div class="lines-table-wrapper" id="lines-table-wrapper" hidden>
+    <div class="lines-summary-bar">
+      <span id="lines-summary"></span>
+      <button id="btn-copy-lines" class="btn-link">Copy all cleaned lines</button>
+    </div>
+    <table class="lines-table" aria-label="Line by line comparison">
+      <thead>
+        <tr>
+          <th class="lines-col-num">#</th>
+          <th>Original</th>
+          <th>Cleaned</th>
+          <th class="lines-col-action"></th>
+        </tr>
+      </thead>
+      <tbody id="lines-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- Action Buttons -->
+  <section class="buttons-section" aria-label="Actions">
+    <button id="btn-clean" class="btn btn-primary">Clean Text</button>
+    <button id="btn-copy" class="btn btn-secondary">Copy Output</button>
+    <button id="btn-download" class="btn btn-ghost" disabled>Download .txt</button>
+    <button id="btn-show-diff" class="btn btn-ghost" disabled>Show Changes</button>
+    <button id="btn-clear" class="btn btn-ghost">Clear</button>
+  </section>
+
+  <div id="copy-feedback" class="copy-feedback" aria-live="polite"></div>
+
+  <!-- Smart Detection Report -->
+  <section id="report-section" class="report-section" hidden aria-label="Paste analysis report">
+    <div class="report-header">
+      <span class="report-title">What PasteLint Found</span>
+      <span class="report-badge" id="report-badge"></span>
+    </div>
+    <ul class="report-list" id="report-list" aria-live="polite"></ul>
+  </section>
+
+  <!-- Text Brief / Insight Panel -->
+  <section id="brief-section" class="brief-section" hidden aria-label="Text brief and insights">
+    <div class="brief-header">
+      <span class="brief-title">Text Brief</span>
+      <span class="brief-type-badge" id="brief-type-badge"></span>
+    </div>
+    <div class="brief-stats" id="brief-stats"></div>
+    <div class="brief-refs" id="brief-refs"></div>
+  </section>
+
+  <!-- Advanced Features -->
+  <details class="advanced-details" id="advanced-details">
+    <summary class="advanced-summary">
+      <span class="advanced-summary-label">Advanced Features</span>
+      <span class="advanced-summary-chips">
+        <span class="adv-chip">Show Changes</span>
+        <span class="adv-chip">Custom Rules</span>
+        <span class="adv-chip">Session History</span>
+      </span>
+      <span class="advanced-summary-arrow" aria-hidden="true">›</span>
+    </summary>
+
+    <div class="advanced-body">
+
+      <section id="diff-section" class="diff-section adv-panel" hidden aria-label="Changes view">
+        <div class="diff-header">
+          <span class="diff-title">What Changed</span>
+          <span class="diff-legend">
+            <span class="legend-item"><mark class="diff-removed">removed</mark></span>
+            <span class="legend-item"><mark class="diff-added">added</mark></span>
+            <span class="diff-summary" id="diff-summary"></span>
+          </span>
+        </div>
+        <div id="diff-output" class="diff-output" aria-live="polite"></div>
+      </section>
+
+      <section class="custom-rules-section adv-panel" aria-label="Custom find and replace rules">
+        <div class="custom-rules-header">
+          <div>
+            <span class="custom-rules-title">Custom Rules</span>
+            <small class="custom-rules-desc">Persistent find &amp; replace — applied after cleaning modes</small>
+          </div>
+          <button id="btn-add-rule" class="btn-link">+ Add rule</button>
+        </div>
+        <div id="rules-list" class="rules-list"></div>
+      </section>
+
+      <section id="history-section" class="history-section adv-panel" aria-label="Recent sessions">
+        <div class="history-header">
+          <span class="history-title">Recent Sessions</span>
+          <button id="btn-clear-history" class="btn-link btn-link-danger">Clear all</button>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+    </div>
+  </details>
+
+  <!-- SEO Text -->
+  <section class="seo-text">
+    <h2>What PasteLint Does</h2>
+    <p>
+      When you copy text from Word, PDFs, AI chatbots, emails, or websites it often carries invisible baggage —
+      extra spaces, non-breaking characters, smart quotes, long dashes, and hidden Unicode that breaks layouts,
+      confuses voice systems, or just looks wrong. PasteLint detects exactly what it found, cleans it all up,
+      and shows you precisely what changed — entirely in your browser.
+    </p>
+    <p>
+      Need the same fix every time? Save custom find &amp; replace rules that persist between visits.
+      Working with lists or spreadsheet data? Switch to Line-by-Line mode for row-by-row cleaning.
+    </p>
+    <h2>Common Use Cases</h2>
+    <ul class="use-cases">
+      <li>Fix copy paste formatting from Word or PDFs</li>
+      <li>Clean AI-generated text before pasting into email or CMS</li>
+      <li>Rewrite AI-sounding text into clearer, more natural writing</li>
+      <li>Remove hidden characters from copied text</li>
+      <li>Prepare text for IVR, Amazon Polly, or text-to-speech systems</li>
+      <li>Lint and sanitize content before publishing to a website</li>
+      <li>Bulk-clean rows of data copied from a spreadsheet</li>
+    </ul>
+  </section>
+
+  <section class="tools-grid-section">
+    <h2>Text Cleaning Tools</h2>
+    <p>
+      Choose the tool that best matches the kind of text problem you are trying to fix.
+    </p>
+
+    <div class="tool-grid">
+      <a class="tool-card" href="/rodan-human-rewrite.html">
+        <h3>Rodan — Human Rewrite Tool</h3>
+        <p>Rewrite stiff, AI-sounding text into something natural, clear, and human.</p>
+      </a>
+
+      <a class="tool-card" href="/fix-copy-paste-formatting.html">
+        <h3>Fix Copy Paste Formatting</h3>
+        <p>Clean messy text copied from websites, emails, PDFs, Word, and AI tools.</p>
+      </a>
+
+      <a class="tool-card" href="/remove-hidden-characters.html">
+        <h3>Remove Hidden Characters</h3>
+        <p>Remove zero-width spaces, non-breaking spaces, invisible Unicode, and copy-paste artifacts.</p>
+      </a>
+
+      <a class="tool-card" href="/ai-text-cleaner.html">
+        <h3>Clean AI Text</h3>
+        <p>Fix spacing, formatting, and structure issues in AI-generated text.</p>
+      </a>
+
+      <a class="tool-card" href="/pdf-copy-fix.html">
+        <h3>Fix PDF Copy Issues</h3>
+        <p>Remove awkward line breaks, soft hyphens, hidden characters, and spacing issues from PDF text.</p>
+      </a>
+
+      <a class="tool-card" href="/word-paste-cleaner.html">
+        <h3>Clean Word and Google Docs Text</h3>
+        <p>Fix smart quotes, extra spaces, line breaks, and hidden formatting from document text.</p>
+      </a>
+
+      <a class="tool-card" href="/ivr-text-prep.html">
+        <h3>Prepare Text for IVR and TTS</h3>
+        <p>Clean and simplify text for Amazon Polly, Google TTS, Nuance, and voice systems.</p>
+      </a>
+
+      <a class="tool-card" href="/remove-line-breaks.html">
+        <h3>Remove Line Breaks</h3>
+        <p>Clean broken lines from PDFs, emails, copied documents, and AI-generated text.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Private by Design</h2>
+    <p>
+      PasteLint processes text locally in your browser. Your text is not uploaded, stored, or sent to a server.
+    </p>
+  </section>
+
+</main>
 
 <footer>
   <p>
@@ -341,13 +366,14 @@
 
   <h4>Related tools</h4>
   <p>
+    <a href="/rodan-human-rewrite.html">Rodan Human Rewrite Tool</a> |
     <a href="/fix-copy-paste-formatting.html">Fix Copy Paste Formatting</a> |
     <a href="/remove-hidden-characters.html">Remove Hidden Characters</a> |
     <a href="/ai-text-cleaner.html">Clean AI Text</a> |
     <a href="/pdf-copy-fix.html">Fix PDF Formatting</a> |
     <a href="/word-paste-cleaner.html">Clean Word Text</a> |
-    <a href="/ivr-text-prep.html">IVR Text Prep</a>
-    <a href="/remove-line-breaks.html">Remove Line Breaks</a> |
+    <a href="/ivr-text-prep.html">IVR Text Prep</a> |
+    <a href="/remove-line-breaks.html">Remove Line Breaks</a>
   </p>
 
   <h4>Legal</h4>
@@ -362,6 +388,6 @@
   </p>
 </footer>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
