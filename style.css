@@ -1548,3 +1548,183 @@ section {
   font-size: 0.9rem;
   color: #6b7280;
 }
+/* =========================================================
+   PasteLint Theme + Visibility Polish
+   Add this block to the bottom of style.css
+   ========================================================= */
+
+/* Center theme toggle above PasteLint brand */
+.hero .theme-toggle,
+.theme-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0 auto 18px auto;
+  text-align: center;
+}
+
+.theme-toggle button {
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Keep header brand centered under theme toggle */
+.hero .header-brand,
+.header-brand {
+  text-align: center;
+  width: 100%;
+}
+
+/* Make subtitle text pop by theme */
+body.light .subtitle,
+body.light .subtitle-small,
+:root:not(.dark):not(.terminal) .subtitle,
+:root:not(.dark):not(.terminal) .subtitle-small {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+body.dark .subtitle,
+body.dark .subtitle-small {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+body.terminal .subtitle,
+body.terminal .subtitle-small {
+  color: #22c55e;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.28);
+}
+
+/* If your JS applies theme class to html instead of body */
+html.light .subtitle,
+html.light .subtitle-small {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+html.dark .subtitle,
+html.dark .subtitle-small {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+html.terminal .subtitle,
+html.terminal .subtitle-small {
+  color: #22c55e;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(34, 197, 94, 0.28);
+}
+
+/* Make all text fields readable in every theme */
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="url"],
+input[type="email"],
+.rules-list input,
+#input-text,
+#output-text {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #94a3b8 !important;
+  caret-color: #111827;
+}
+
+/* Light placeholders */
+textarea::placeholder,
+input::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+
+/* Dark theme text fields */
+body.dark textarea,
+body.dark input[type="text"],
+body.dark input[type="search"],
+body.dark input[type="url"],
+body.dark input[type="email"],
+body.dark .rules-list input,
+body.dark #input-text,
+body.dark #output-text,
+html.dark textarea,
+html.dark input[type="text"],
+html.dark input[type="search"],
+html.dark input[type="url"],
+html.dark input[type="email"],
+html.dark .rules-list input,
+html.dark #input-text,
+html.dark #output-text {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #64748b !important;
+  caret-color: #f8fafc;
+}
+
+body.dark textarea::placeholder,
+body.dark input::placeholder,
+html.dark textarea::placeholder,
+html.dark input::placeholder {
+  color: #cbd5e1 !important;
+  opacity: 1;
+}
+
+/* Terminal theme text fields */
+body.terminal textarea,
+body.terminal input[type="text"],
+body.terminal input[type="search"],
+body.terminal input[type="url"],
+body.terminal input[type="email"],
+body.terminal .rules-list input,
+body.terminal #input-text,
+body.terminal #output-text,
+html.terminal textarea,
+html.terminal input[type="text"],
+html.terminal input[type="search"],
+html.terminal input[type="url"],
+html.terminal input[type="email"],
+html.terminal .rules-list input,
+html.terminal #input-text,
+html.terminal #output-text {
+  background: #020617 !important;
+  color: #22c55e !important;
+  border-color: #22c55e !important;
+  caret-color: #22c55e;
+  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.18);
+}
+
+body.terminal textarea::placeholder,
+body.terminal input::placeholder,
+html.terminal textarea::placeholder,
+html.terminal input::placeholder {
+  color: #86efac !important;
+  opacity: 0.85;
+}
+
+/* Cleaned text readonly box should still look intentional */
+#output-text[readonly] {
+  opacity: 1;
+}
+
+/* Make textarea labels readable across themes */
+.textarea-wrapper label,
+body.dark .textarea-wrapper label,
+body.terminal .textarea-wrapper label,
+html.dark .textarea-wrapper label,
+html.terminal .textarea-wrapper label {
+  font-weight: 700;
+}
+
+/* Small mobile cleanup */
+@media (max-width: 700px) {
+  .hero .theme-toggle,
+  .theme-toggle {
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+}
