@@ -1736,3 +1736,46 @@ html.terminal .textarea-wrapper label {
     margin-bottom: 14px;
   }
 }
+/* Global header/toggle layout fix */
+.hero {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+  padding-top: 32px !important;
+}
+
+.theme-toggle {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: auto !important;
+  margin: 0 auto 14px auto !important;
+  z-index: 1 !important;
+}
+
+.header-brand {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  margin: 0 auto 18px auto !important;
+  text-align: center !important;
+  z-index: 1 !important;
+}
+
+.header-brand a {
+  display: inline-block !important;
+}
+
+/* Prevent header content from sliding upward into the toggle */
+.hero h1,
+.hero .subtitle,
+.hero .subtitle-small {
+  position: static !important;
+  transform: none !important;
+}
