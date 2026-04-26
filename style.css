@@ -1779,3 +1779,60 @@ html.terminal .textarea-wrapper label {
   position: static !important;
   transform: none !important;
 }
+/* ========================================
+   LIGHT THEME — Navajo Sand Makeover
+   ======================================== */
+
+body.light {
+  background: #f4ecd8;
+  color: #2b2b2b;
+}
+
+/* Main containers */
+body.light main,
+body.light .container {
+  background: transparent;
+}
+
+/* Cards / panels */
+body.light .rodan-panel,
+body.light .tool-card,
+body.light .featured-tool-card,
+body.light .options-section,
+body.light .textareas-section,
+body.light .seo-text,
+body.light .tools-grid-section {
+  background: #fffaf0;
+  border: 1px solid #e6d8b5;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+/* Textareas */
+body.light textarea,
+body.light input {
+  background: #fffdf5;
+  border: 1px solid #e6d8b5;
+  color: #2b2b2b;
+}
+
+/* Placeholder text */
+body.light textarea::placeholder {
+  color: #9a8f74;
+}
+
+/* Chips / pills */
+body.light .chip {
+  background: #f1e6c8;
+  border: 1px solid #e0d1a3;
+  color: #5c5135;
+}
+
+/* Score card subtle tint */
+body.light .score-card {
+  background: rgba(255, 235, 180, 0.25);
+}
+
+/* Buttons (optional polish) */
+body.light .btn-primary {
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+}
