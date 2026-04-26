@@ -1836,3 +1836,19 @@ body.light .score-card {
 body.light .btn-primary {
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
 }
+/* ========================================
+   LIGHT THEME HERO REFINEMENT
+   ======================================== */
+
+body.light .hero {
+  background: linear-gradient(
+    135deg,
+    #4f7df3 0%,
+    #6b8cff 40%,
+    #8fa8ff 100%
+  );
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  max-width: 980px;
+  margin: 24px auto 0 auto;
+}
