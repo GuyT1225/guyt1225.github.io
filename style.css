@@ -1852,3 +1852,24 @@ body.light .hero {
   max-width: 980px;
   margin: 24px auto 0 auto;
 }
+/* ========================================
+   LIGHT THEME TEXTURE (VERY SUBTLE)
+   ======================================== */
+
+body.light {
+  background: #f4ecd8;
+  position: relative;
+}
+
+body.light::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(0,0,0,0.15) 1px, transparent 0);
+
+  background-size: 24px 24px;
+}
