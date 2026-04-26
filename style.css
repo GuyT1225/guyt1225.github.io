@@ -105,12 +105,20 @@ header h1 {
 }
 
 /* --- Theme toggle --- */
+/* Fix theme toggle placement */
 .theme-toggle {
-  position: absolute;
-  top: 15px;
-  right: 20px;
+  position: relative; /* NOT absolute or fixed */
   display: flex;
-  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 16px auto 8px auto;
+  z-index: 2;
+}
+
+/* Add breathing room to header */
+.hero {
+  padding-top: 24px;
 }
 
 .theme-toggle button {
