@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rodan Human Rewrite Tool | PasteLint</title>
+<meta name="description" content="Rewrite AI-sounding text into natural, human writing. Browser-only. No login. No upload.">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background:#f8fafc;
+  color:#0f172a;
+}
+textarea {
+  width:100%;
+  height:220px;
+  margin-top:10px;
+  padding:10px;
+}
+button {
+  margin-top:10px;
+  padding:10px 14px;
+  cursor:pointer;
+}
+.output {
+  margin-top:20px;
+  padding:15px;
+  border:1px solid #ccc;
+}
+small {
+  color:#64748b;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Rodan</h1>
+<p><strong>Human Rewrite Tool</strong></p>
+
+<p>Rewrite AI-sounding text into something natural, clear, and human.</p>
+
+<p><small>Inspired by a real human-editing checklist. Not an AI detector.</small></p>
+
+<textarea id="input" placeholder="Paste text here..."></textarea>
+
+<br>
+
+<select id="mode">
+  <option value="natural">Natural</option>
+  <option value="concise">More concise</option>
+  <option value="formal">More formal</option>
+  <option value="casual">More casual</option>
+  <option value="direct">More direct</option>
+  <option value="plain">Plain English</option>
+  <option value="founder">Founder tone</option>
+  <option value="killai">Kill AI Voice</option>
+  <option value="personal">Make it sound like me</option>
+</select>
+
+<br>
+
+<button onclick="rewrite()">Rewrite</button>
+
+<div class="output" id="output"></div>
+
+<p><small>Review for accuracy. Rodan rewrites style, not facts.</small></p>
+
+<script>
+function rewrite() {
+  let text = document.getElementById("input").value;
+
+  if (!text) {
+    document.getElementById("output").innerText = "Paste text first.";
+    return;
+  }
+
+  let cleaned = text;
+
+  // simple cleanup rules
+  cleaned = cleaned.replace(/delve into/gi, "explain");
+  cleaned = cleaned.replace(/leverage/gi, "use");
+  cleaned = cleaned.replace(/utilize/gi, "use");
+  cleaned = cleaned.replace(/in order to/gi, "to");
+  cleaned = cleaned.replace(/it is important to note that/gi, "");
+  cleaned = cleaned.replace(/great question/gi, "");
+  cleaned = cleaned.replace(/in conclusion/gi, "");
+
+  // tone adjustments
+  let mode = document.getElementById("mode").value;
+
+  if (mode === "concise") {
+    cleaned = cleaned.replace(/very|really|just/gi, "");
+  }
+
+  if (mode === "direct") {
+    cleaned = cleaned.replace(/might be able to/gi, "can");
+  }
+
+  if (mode === "plain") {
+    cleaned = cleaned.replace(/facilitate/gi, "help");
+  }
+
+  if (mode === "killai") {
+    cleaned = cleaned.replace(/robust|seamless|transformative/gi, "");
+  }
+
+  cleaned = cleaned.replace(/\s{2,}/g, " ").trim();
+
+  document.getElementById("output").innerText = cleaned;
+}
+</script>
+
+</body>
+</html>
