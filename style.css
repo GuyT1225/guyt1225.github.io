@@ -1940,3 +1940,22 @@ body.light main .subtitle-small {
   color: #2563eb !important;
   text-shadow: none !important;
 }
+/* HARD FIX: hero subtitle visibility in light theme */
+html.light header.hero p.subtitle,
+html.light header.hero p.subtitle-small,
+body.light header.hero p.subtitle,
+body.light header.hero p.subtitle-small,
+header.hero p.subtitle,
+header.hero p.subtitle-small {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35) !important;
+}
+
+html.light header.hero p.subtitle-small,
+body.light header.hero p.subtitle-small,
+header.hero p.subtitle-small {
+  color: #eaf2ff !important;
+}
